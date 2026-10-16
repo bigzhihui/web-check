@@ -1,12 +1,9 @@
 ---
-import ErrorPage from '@components/error/ErrorPage.astro';
-
-export const prerender = true;
+import PageLayout from '@layouts/Page.astro';
 ---
 
-<ErrorPage
-  status={404}
-  statusText="Not Found"
-  heading={['Page', 'not found']}
-  message="There's nothing at this address. The link may be mistyped, or the page has moved."
-/>
+<PageLayout title="页面不存在 | 十三月网站检测">
+  <h1>页面不存在</h1>
+  <p>请检查网址，或返回首页重新开始检测。</p>
+  <a href="/">返回首页 →</a>
+</PageLayout>

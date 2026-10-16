@@ -1,6 +1,6 @@
 {
-  "name": "Web Check",
-  "short_name": "Web Check",
+  "name": "十三月网站检测",
+  "short_name": "网站检测",
   "description": "Web Check is the all-in-one OSINT and security tool, for revealing the inner workings of any website",
   "id": "/",
   "start_url": "/",

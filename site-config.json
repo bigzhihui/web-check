@@ -1,0 +1,26 @@
+{
+  "name": "十三月网站检测",
+  "url": "https://check.afeiii.com",
+  "support": "support@afeiii.com",
+  "repository": "https://github.com/bigzhihui/web-check",
+  "checks": [
+    "get-ip",
+    "ssl",
+    "dns",
+    "cookies",
+    "robots-txt",
+    "headers",
+    "redirects",
+    "txt-records",
+    "status",
+    "caa-records",
+    "hsts",
+    "dns-server",
+    "sitemap",
+    "security-txt",
+    "linked-pages",
+    "social-tags",
+    "mail-config",
+    "http-security"
+  ]
+}

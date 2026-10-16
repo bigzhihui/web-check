@@ -8,7 +8,7 @@ interface Props {
   heading?: string;
 }
 
-const { current, heading = 'Other checks' } = Astro.props;
+const { current, heading = '其他检测分类' } = Astro.props;
 const others = categoryIds.filter((category) => category !== current);
 ---
 

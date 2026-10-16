@@ -4,22 +4,22 @@ import { fromFinding } from 'client/components/misc/Icon';
 import { checkResponseTime } from 'client/analysis/rules/status';
 
 const STEPS = [
-  ['dns', 'DNS Lookup'],
-  ['connect', 'TCP Connect'],
-  ['tls', 'TLS Handshake'],
-  ['wait', 'Server Response'],
-  ['download', 'Download'],
+  ['dns', 'DNS 查询'],
+  ['connect', 'TCP 连接'],
+  ['tls', 'TLS 握手'],
+  ['wait', '服务器响应'],
+  ['download', '下载'],
 ];
 
 const ServerStatusCard = (props: { data: any; title: string; actionButtons: any }): JSX.Element => {
   const serverStatus = props.data;
   return (
     <Card heading={props.title} actionButtons={props.actionButtons}>
-      <Row lbl="Is Up?" val={serverStatus.isUp} yes="Online" no="Offline" />
-      <Row lbl="Status Code" val={serverStatus.responseCode} />
+      <Row lbl="可访问" val={serverStatus.isUp} yes="在线" no="离线" />
+      <Row lbl="状态码" val={serverStatus.responseCode} />
       {serverStatus.responseTime && (
         <Row
-          lbl="Response Time"
+          lbl="响应耗时"
           val={`${Math.round(serverStatus.responseTime)}ms`}
           term="response-time"
           {...fromFinding(checkResponseTime(serverStatus.responseTime))}

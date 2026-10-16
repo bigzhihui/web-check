@@ -1,4 +1,5 @@
 import type { CategoryId } from '@/data/categories';
+import { checkText, enabledChecks } from '@/data/afeiii';
 
 import getIp from './get-ip';
 import ssl from './ssl';
@@ -106,9 +107,22 @@ const all = {
 
 export type CheckId = keyof typeof all;
 
-export const checks: Record<CheckId, Check> = all;
+export const checks: Record<CheckId, Check> = Object.fromEntries(
+  Object.entries(all).map(([id, info]) => [
+    id,
+    checkText[id]
+      ? {
+          ...info,
+          title: checkText[id][0],
+          summary: checkText[id][1],
+          description: checkText[id][1],
+          use: '将检测到的公开配置与网站预期设置核对，可帮助定位访问、证书和抓取问题。结果反映检测当时的响应，网络环境或网站防护可能影响部分项目。',
+        }
+      : info,
+  ]),
+) as Record<CheckId, Check>;
 
-export const checkIds = Object.keys(all) as CheckId[];
+export const checkIds = (Object.keys(all) as CheckId[]).filter((id) => enabledChecks.has(id));
 
 export const isCheck = (value: string): value is CheckId => (checkIds as string[]).includes(value);
 

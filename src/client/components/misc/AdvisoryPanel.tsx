@@ -22,10 +22,10 @@ interface SevMeta {
 }
 
 const META: Record<Severity, SevMeta> = {
-  critical: { label: 'Critical', color: colors.danger, icon: faCircleXmark, defaultOpen: true },
-  issue: { label: 'Issues', color: colors.error, icon: faCircleExclamation, defaultOpen: true },
+  critical: { label: '重要问题', color: colors.danger, icon: faCircleXmark, defaultOpen: true },
+  issue: { label: '待核对项', color: colors.error, icon: faCircleExclamation, defaultOpen: true },
   warning: {
-    label: 'Warnings',
+    label: '提醒',
     color: colors.warning,
     icon: faTriangleExclamation,
     defaultOpen: false,
@@ -137,7 +137,7 @@ const AdvisoryPanel = ({ findings, onJumpTo }: Props): ReactNode => {
   return (
     <Wrapper>
       <Heading as="h2" align="left" color={colors.primary}>
-        Advisory
+        配置参考建议
       </Heading>
       {visible.map((sev) => {
         const meta = META[sev];

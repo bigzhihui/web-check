@@ -1,0 +1,14 @@
+[Unit]
+Description=Web-Check public-only egress policy
+After=docker.service
+Requires=docker.service
+PartOf=docker.service
+Before=web-check.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/apps/web-check/web-check-egress.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

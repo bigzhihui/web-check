@@ -57,8 +57,8 @@ const ResultsContent = styled.section`
 const makeActionButtons = (title: string, refresh: () => void, showInfo: () => void): ReactNode => (
   <ActionButtons
     actions={[
-      { label: `Info about ${title}`, onClick: showInfo, icon: 'ⓘ' },
-      { label: `Re-fetch ${title} data`, onClick: refresh, icon: '↻' },
+      { label: `查看${title}说明`, onClick: showInfo, icon: 'ⓘ' },
+      { label: `重新检测${title}`, onClick: refresh, icon: '↻' },
     ]}
   />
 );

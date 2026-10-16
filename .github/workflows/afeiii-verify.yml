@@ -1,0 +1,34 @@
+name: Afeiii verification
+on:
+  push:
+    branches: [brand/thirteen-month]
+  pull_request:
+    branches: [brand/thirteen-month]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: afeiii-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      PUPPETEER_SKIP_DOWNLOAD: 'true'
+      NODE_CHROMIUM_SKIP_INSTALL: 'true'
+      SITE_URL: https://check.afeiii.com
+      PLATFORM: node
+      ENABLE_ANALYTICS: 'false'
+      PUBLIC_API_TIMEOUT_LIMIT: '45000'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.16.0'
+      - run: corepack enable
+      - run: yarn install --frozen-lockfile
+      - run: yarn test:public
+      - run: yarn lint
+      - run: yarn build

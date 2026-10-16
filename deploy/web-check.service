@@ -1,0 +1,17 @@
+[Unit]
+Description=Thirteen Month Web-Check
+Requires=docker.service web-check-egress.service
+After=docker.service web-check-egress.service network-online.target
+PartOf=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/apps/web-check
+ExecStart=/usr/bin/docker compose --env-file .env up --no-build --abort-on-container-exit --exit-code-from web-check
+ExecStop=/usr/bin/docker compose --env-file .env stop -t 20
+Restart=always
+RestartSec=10
+TimeoutStopSec=40
+
+[Install]
+WantedBy=multi-user.target

@@ -11,7 +11,7 @@ interface Props {
   showCategories?: boolean;
 }
 
-const { tool, label, buttonLabel = 'Analyze', showCategories = false } = Astro.props;
+const { tool, label, buttonLabel = '开始检测', showCategories = false } = Astro.props;
 ---
 
 <form class="scan-form" action="/check" autocomplete="off" data-tool={tool}>
@@ -24,7 +24,7 @@ const { tool, label, buttonLabel = 'Analyze', showCategories = false } = Astro.p
           type="button"
           class="toggle"
           popovertarget="scan-categories"
-          aria-label="Run one category"
+          aria-label="选择检测分类"
         >
           <Icon name="chevron" />
         </button>

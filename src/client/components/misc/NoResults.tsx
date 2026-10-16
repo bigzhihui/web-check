@@ -44,50 +44,46 @@ type Kind = 'unreachable' | 'invalid' | 'api-down' | 'disabled' | 'blocked';
 
 const VARIANT: Record<Kind, { title: string; description: string; reasons: string[] }> = {
   unreachable: {
-    title: 'Cannot Reach This Site',
-    description: 'We could not resolve an IP address for this host, so checks cannot run',
+    title: '暂时无法访问该网站',
+    description: '未能取得该网站的可用 IP 地址，检测未能完成',
     reasons: [
-      'The domain might be misspelled or no longer registered',
-      'The website may be offline or temporarily unreachable',
-      'A DNS resolution issue may be affecting the lookup',
-      'A firewall or geo-block may be preventing access',
+      '请检查域名拼写和注册状态',
+      '目标网站可能暂时不可访问',
+      'DNS 解析状态可能影响本次查询',
+      '网站防护或网络位置可能影响访问',
     ],
   },
   invalid: {
-    title: 'Invalid Input',
-    description: 'That does not look like a valid URL or IP address, so checks cannot run',
+    title: '地址格式不正确',
+    description: '请输入有效的网站域名或 HTTP/HTTPS 地址',
     reasons: [
-      'Enter a domain (example.com) or an IPv4 / IPv6 address',
-      'Check for typos or stray characters in the input',
-      'Avoid spaces and unsupported symbols in the address',
+      '可填写 example.com 或完整的网站地址',
+      '请检查拼写和多余字符',
+      '地址中不要包含空格或不支持的符号',
     ],
   },
   'api-down': {
-    title: 'Service Unavailable',
-    description: 'Most checks failed because the Web-Check API could not be reached',
+    title: '服务暂时不可用',
+    description: '多个检测项目未能返回结果，请稍后重试',
     reasons: [
-      'The API may be down, restarting or rate-limited',
-      'A self-hosted instance might be misconfigured or offline',
-      'A network or firewall issue could be blocking the API',
+      '服务可能正在维护或触发请求限流',
+      '若问题持续，请联系本站反馈',
+      '网络或防护设置也可能影响检测请求',
     ],
   },
   blocked: {
-    title: 'Scanning Not Permitted',
-    description: 'Every check was skipped, as this instance does not allow scanning this host',
+    title: '此地址不支持检测',
+    description: '本站未提供对此地址的检测',
     reasons: [
-      'The administrator may have blocked this domain or IP range',
-      'The instance may be configured to not run these checks',
-      'You can still scan this host from your own instance of Web-Check',
+      '目标域名或网段可能不在本站支持范围',
+      '部分检测项目可能尚未开放',
+      '可查阅开源项目的自托管说明',
     ],
   },
   disabled: {
-    title: 'Web-Check is Paused',
-    description: 'This instance has been temporarily disabled, so checks cannot run',
-    reasons: [
-      'The public instance may be paused to manage running costs',
-      'A self-hosted instance may be in maintenance mode',
-      'You can run your own copy from the open-source repo on GitHub',
-    ],
+    title: '检测服务已暂停',
+    description: '本站检测服务暂时不可用',
+    reasons: ['公共服务可能正在维护', '请稍后重试', '开源项目支持自行部署'],
   },
 };
 

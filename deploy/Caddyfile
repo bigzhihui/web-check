@@ -1,0 +1,15 @@
+check.afeiii.com {
+    encode zstd gzip
+    header {
+        Strict-Transport-Security "max-age=2592000"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    }
+    @account path /account /account/*
+    respond @account 404
+    reverse_proxy 127.0.0.1:3002 {
+        header_up X-Forwarded-For {remote_host}
+    }
+}

@@ -1,0 +1,41 @@
+services:
+  web-check:
+    image: ${WEB_CHECK_IMAGE:?set WEB_CHECK_IMAGE}
+    container_name: web-check
+    # systemd starts this only after the egress policy has been installed.
+    restart: 'no'
+    ports:
+      - '127.0.0.1:3002:3000'
+    environment:
+      PORT: '3000'
+      PLATFORM: node
+      SITE_URL: https://check.afeiii.com
+      API_ENABLE_RATE_LIMIT: 'true'
+      API_CORS_ORIGIN: https://check.afeiii.com
+      PUBLIC_API_TIMEOUT_LIMIT: '20000'
+      TRUST_PROXY: '1'
+      API_ENABLED_CHECKS: get-ip,ssl,dns,cookies,robots-txt,headers,redirects,txt-records,status,caa-records,hsts,dns-server,sitemap,security-txt,linked-pages,social-tags,mail-config,http-security
+      ENABLE_ANALYTICS: 'false'
+    mem_limit: 1536m
+    cpus: 1.0
+    pids_limit: 128
+    read_only: true
+    tmpfs:
+      - /tmp:size=256m,mode=1777
+    dns: [8.8.8.8, 1.1.1.1]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+    networks: [web-check]
+networks:
+  web-check:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-webcheck
+    ipam:
+      config:
+        - subnet: 172.30.30.0/24

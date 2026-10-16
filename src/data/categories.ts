@@ -138,11 +138,30 @@ const all = {
 
 export type CategoryId = keyof typeof all;
 
+const localized: Record<string, [string, string, string]> = {
+  security: ['网站安全', '网站安全配置检测', '查看 SSL 证书、HTTP 安全头、Cookie 与 HTTPS 配置。'],
+  seo: ['搜索优化', '网站 SEO 配置检测', '查看 robots.txt、站点地图、跳转与页面分享标签。'],
+  server: ['网站服务', '网站服务检测', '查看网站解析、响应头、响应状态与跳转。'],
+  domain: ['域名与 DNS', '域名与 DNS 查询', '查看 DNS、TXT、CAA 记录与权威名称服务器。'],
+  email: ['邮件配置', '域名邮件配置检测', '查看 MX、SPF、DKIM 与 DMARC 等公开邮件配置。'],
+  performance: ['响应与耗时', '网站响应检测', '查看网站状态、响应耗时与跳转路径。'],
+  privacy: ['隐私配置', '网站隐私配置检测', '查看 Cookie、安全属性及页面公开链接。'],
+};
+for (const [id, text] of Object.entries(localized)) {
+  Object.assign(all[id as CategoryId], {
+    label: text[0],
+    title: text[1],
+    description: text[2],
+    heading: [text[0], '在线', '检测'],
+    tagline: text[2],
+    why: [text[2], '结果来自检测时可访问的公开信息，需结合网站预期配置和网络情况判断。'],
+  });
+}
 export const categories: Record<CategoryId, Category> = all;
 
 export const categoryIds = Object.keys(all) as CategoryId[];
 
-export const toolName = (category: CategoryId): string => `${all[category].label} Checker`;
+export const toolName = (category: CategoryId): string => `${all[category].label}检测`;
 
 export const isCategory = (value: string): value is CategoryId =>
   (categoryIds as string[]).includes(value);

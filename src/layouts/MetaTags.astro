@@ -12,20 +12,20 @@ interface Props {
 
 // Default meta tag values
 const siteInfo = {
-  title: 'Web Check',
-  titleLong: 'Web Check - X-Ray Vision for any Website',
+  title: '十三月网站检测',
+  titleLong: '十三月网站检测 - DNS、SSL 证书与网站 SEO 在线检测',
   description:
-    'Web Check is the all-in-one OSINT and security tool, for revealing the inner workings of any website',
+    '十三月网站检测提供 DNS 记录、SSL 证书、HTTP 响应头、跳转链与 SEO 抓取配置在线查询，帮助排查公网网站问题。',
   keywords:
     'web check, OSINT, website security, security audit, DNS lookup, SSL check, ' +
     'tech stack detection, website analyzer, web tools, open source',
   themeColor: '#c1fb41',
-  author: 'Alicia Sykes',
+  author: '十三月 afeiii',
   twitter: '@Lissy_Sykes',
-  site: (import.meta.env.SITE_URL || 'https://web-check.xyz').replace(/\/+$/, ''),
+  site: (import.meta.env.SITE_URL || 'https://check.afeiii.com').replace(/\/+$/, ''),
   analytics: {
-    enable: import.meta.env.ENABLE_ANALYTICS,
-    domain: 'web-check.as93.net',
+    enable: import.meta.env.ENABLE_ANALYTICS === 'true' && !!import.meta.env.ANALYTICS_DOMAIN,
+    domain: import.meta.env.ANALYTICS_DOMAIN || '',
     script: 'https://no-track.as93.net/js/script.js',
   },
 };
@@ -37,8 +37,9 @@ const ogTitle = title ?? siteInfo.titleLong;
 const pageDescription = description ?? siteInfo.description;
 const pageKeywords = keywords ?? siteInfo.keywords;
 
-const { site, author, twitter, analytics, themeColor } = siteInfo;
-const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', site).href;
+const { site, author, analytics, themeColor } = siteInfo;
+const pagePath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const canonical = new URL(pagePath === '/check' ? '/' : pagePath, site).href;
 const ogImage = `${site}/banner.png`;
 
 // Given a map of breadcrumbs, return the JSON-LD for the BreadcrumbList schema
@@ -71,7 +72,7 @@ const makeBreadcrumbs = () => {
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="generator" content={Astro.generator} />
-<meta name="robots" content="index, follow" />
+<meta name="robots" content={Astro.params.target ? 'noindex, nofollow' : 'index, follow'} />
 
 <!-- Icons and colors -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -92,8 +93,6 @@ const makeBreadcrumbs = () => {
 <meta name="twitter:title" content={ogTitle} />
 <meta name="twitter:description" content={pageDescription} />
 <meta name="twitter:image" content={ogImage} />
-<meta name="twitter:site" content={twitter} />
-<meta name="twitter:creator" content={twitter} />
 
 <!-- Non-tracking hit counter -->
 {analytics.enable && (

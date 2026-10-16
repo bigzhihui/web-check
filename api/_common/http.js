@@ -35,7 +35,14 @@ const BOMS = { fffe: 'utf-16le', feff: 'utf-16be' };
 // Auto-parse JSON when the response advertises it, fall back to raw text
 const parseBody = async (response) => {
   const ct = (response.headers.get('content-type') || '').toLowerCase();
-  const bytes = Buffer.from(await response.arrayBuffer());
+  const chunks = [];
+  let total = 0;
+  for await (const chunk of response.body || []) {
+    total += chunk.length;
+    if (total > 2 * 1024 * 1024) throw new Error('目标响应超过 2 MiB，已停止读取。');
+    chunks.push(chunk);
+  }
+  const bytes = Buffer.concat(chunks);
   const text = new TextDecoder(BOMS[bytes.toString('hex', 0, 2)] || 'utf-8').decode(bytes);
   if (!text) return ct.includes('json') ? null : '';
   if (ct.includes('json')) {
@@ -71,7 +78,7 @@ export const UA =
   'Chrome/154.0.0.0 Safari/537.36';
 
 // Our own user agent, for APIs and files meant for tools, which ask clients to say who they are
-export const APP_UA = 'web-check (+https://web-check.xyz)';
+export const APP_UA = 'ThirteenMonth-WebCheck (+https://check.afeiii.com)';
 
 // Headers Cloudflare, Vercel, AWS WAF and DataDome add when they challenge or block a request
 const BOT_CHECK_HEADERS = [

@@ -33,7 +33,7 @@ const deployTarget = unwrapEnvVar('PLATFORM', guessPlatform()).toLowerCase();
 const output = unwrapEnvVar('OUTPUT', 'static');
 
 // The FQDN of where the site is hosted (used for sitemaps & canonical URLs)
-const site = unwrapEnvVar('SITE_URL', 'https://web-check.xyz');
+const site = unwrapEnvVar('SITE_URL', 'https://check.afeiii.com');
 
 // The base URL of the site (if serving from a subdirectory)
 const base = unwrapEnvVar('BASE_URL', '/');
@@ -62,7 +62,13 @@ const dropTrailingSlash = (item) => {
 const integrations = [
   svelte(),
   react(),
-  sitemap({ filter: (page) => !page.includes('/account'), serialize: dropTrailingSlash }),
+  sitemap({
+    filter: (page) =>
+      !['/account', '/glossary', '/self-hosted-setup', '/web-check-api'].some((path) =>
+        page.includes(path),
+      ),
+    serialize: dropTrailingSlash,
+  }),
   separateBuildCache,
 ];
 
@@ -97,9 +103,7 @@ const redirects = {
 };
 
 // Skip the marketing homepage for self-hosted users
-if (!isBossServer) {
-  redirects['/'] = '/check';
-}
+// The branded homepage is served directly at the domain root.
 
 // Resolve the @styles alias for sass @use (rolldown-vite needs it set explicitly)
 const stylesDir = fileURLToPath(new URL('./src/styles', import.meta.url));

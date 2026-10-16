@@ -47,6 +47,7 @@ import SubdomainsCard from 'client/components/Results/Subdomains';
 
 import { checks, type CheckId } from '@/data/checks';
 import type { CategoryId } from '@/data/categories';
+import { enabledChecks } from '@/data/afeiii';
 import type { CardSpec, JobSpec, JobContext, JobsState } from './types';
 
 const URL_ONLY = ['url'] as const;
@@ -400,7 +401,9 @@ const matches = (card: JobSpec['cards'][number], { category, check }: Filter = {
 
 // Jobs to run for a category or single check, cardless jobs like get-ip always run
 export const jobsFor = (filter?: Filter): JobSpec[] =>
-  jobs.filter((j) => !j.cards.length || j.cards.some((c) => matches(c, filter)));
+  jobs.filter(
+    (j) => enabledChecks.has(j.id) && (!j.cards.length || j.cards.some((c) => matches(c, filter))),
+  );
 
 // Cards to show for a category or single check, each paired with its owning job id
 export const cardsFor = (

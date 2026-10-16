@@ -17,9 +17,7 @@ const info = checks[check];
 
 // Uncategorised checks fall back to a full report rather than a scoped one
 const scanCheck = info.categories.length ? check : undefined;
-const scanLabel = scanCheck
-  ? `Enter a URL to run the ${info.title} check`
-  : 'Enter a URL to run the full report';
+const scanLabel = scanCheck ? `输入网址，检测${info.title}` : '输入网址，开始完整检测';
 
 // Resources are either a bare URL or a titled link
 const resources = info.resources.map((resource) =>
@@ -35,18 +33,18 @@ const terms = Object.entries(glossary).filter(([, term]) => term.check === check
 ---
 
 <PageLayout
-  title={`${info.title} | Web Check`}
+  title={`${info.title} | 十三月网站检测`}
   description={info.summary}
   keywords={keywords}
   breadcrumbs={[
-    { name: 'Web Check', item: '' },
-    { name: 'Checks', item: 'checks' },
+    { name: '十三月网站检测', item: '' },
+    { name: '检测项目', item: 'checks' },
     { name: info.title, item: check },
   ]}
 >
   <section class="hero">
     <p class="crumbs">
-      <a href="/checks">All checks</a>
+      <a href="/checks">全部检测项目</a>
     </p>
     <h1>{info.title}</h1>
     <p class="summary">{info.summary}</p>
@@ -56,15 +54,15 @@ const terms = Object.entries(glossary).filter(([, term]) => term.check === check
 
   <div class="body">
     <article>
-      <h2>What it is</h2>
+      <h2>检测内容</h2>
       <p>{info.description}</p>
-      <h2>Why it matters</h2>
+      <h2>用途说明</h2>
       <p>{info.use}</p>
     </article>
 
     {terms.length > 0 && (
       <section class="terms">
-        <h2>Key terms</h2>
+        <h2>技术术语</h2>
         <TermList terms={terms} linkToGlossary />
       </section>
     )}
@@ -80,7 +78,7 @@ const terms = Object.entries(glossary).filter(([, term]) => term.check === check
       } -->
       {resources.length > 0 && (
         <div class="resources">
-          <h2>Further reading</h2>
+          <h2>参考资料</h2>
           <ul>
             {resources.map((resource) => (
               <li>
@@ -95,7 +93,7 @@ const terms = Object.entries(glossary).filter(([, term]) => term.check === check
     </aside>
   </div>
 
-  {related.length > 0 && <CheckList ids={related} heading="Related checks" />}
+  {related.length > 0 && <CheckList ids={related} heading="相关检测" />}
 </PageLayout>
 
 <style lang="scss">

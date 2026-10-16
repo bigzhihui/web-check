@@ -1,0 +1,33 @@
+---
+import PageLayout from '@layouts/Page.astro';
+---
+
+<PageLayout title="常见问题 | 十三月网站检测">
+  <article>
+    <h1>常见问题</h1>
+    <h2>怎样开始检测？</h2>
+    <p>
+      输入 example.com 或完整的 HTTP/HTTPS
+      地址，点击“开始检测”。各项结果会陆续显示，也可选择单独项目检测。
+    </p>
+    <h2>为什么部分检测失败？</h2>
+    <p>
+      目标网站防护、网络连通性和请求超时都可能导致失败；没有读取到信息不等于网站一定配置错误。可查看失败原因并单独重试。
+    </p>
+    <h2>可以检测哪些地址？</h2>
+    <p>本站接受公网网站的 HTTP/HTTPS 地址，不支持内网、本机、保留地址或自定义端口。</p>
+    <h2>结果会被搜索引擎收录吗？</h2>
+    <p>检测结果页与 API 不供搜索索引，本站不将检测结果保存为公开报告。</p>
+    <h2>如何反馈问题？</h2>
+    <p>请将检测项目、发生时间和不含私密参数的网址发至 support@afeiii.com。</p>
+  </article>
+</PageLayout>
+<style>
+  article {
+    max-width: 52rem;
+    line-height: 1.9;
+  }
+  h2 {
+    margin-top: 2rem;
+  }
+</style>

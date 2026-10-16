@@ -16,18 +16,18 @@ const ids = checksInCategory(category);
 ---
 
 <PageLayout
-  title={`${info.title} | Web Check`}
+  title={`${info.title} | 十三月网站检测`}
   description={info.description}
   keywords={info.keywords}
   breadcrumbs={[
-    { name: 'Web Check', item: '' },
+    { name: '十三月网站检测', item: '' },
     { name: info.label, item: category },
   ]}
 >
   <CategoryHero category={category} info={info} count={ids.length} />
   <CheckList ids={ids} />
   <section class="why">
-    <h2>What this tells you</h2>
+    <h2>如何理解结果</h2>
     {info.why.map((paragraph) => (
       <p>{paragraph}</p>
     ))}

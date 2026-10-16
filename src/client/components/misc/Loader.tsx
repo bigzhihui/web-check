@@ -244,9 +244,9 @@ const Loader = (props: { show: boolean; jobs: LoadingJob[] }): JSX.Element => {
         {width > 0 && <Chip x={width / 2} y={height / 2} done={done} total={jobs.length} />}
       </svg>
       <p>
-        It may take up to a minute for all jobs to complete
+        各项检测将陆续完成，请稍候
         <br />
-        You can view preliminary results as they come in below
+        可在下方查看已经返回的结果
       </p>
     </LoaderContainer>
   );

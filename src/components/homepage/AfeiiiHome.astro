@@ -1,0 +1,100 @@
+---
+import PageLayout from '@layouts/Page.astro';
+import ScanForm from '@components/form/ScanForm.astro';
+import { checks, checkIds } from '@/data/checks';
+import { site } from '@/data/afeiii';
+---
+
+<PageLayout title={`${site.name} - DNS、SSL 证书与网站 SEO 在线检测`}>
+  <section class="hero">
+    <p class="eyebrow">THIRTEEN MONTH · WEBSITE CHECK</p>
+    <h1>
+      十三月<span>网站检测</span>
+    </h1>
+    <p class="intro">输入网站地址，查看 DNS、SSL 证书、HTTP 响应头、跳转与搜索抓取配置。</p>
+    <ScanForm label="网站域名或网址" buttonLabel="开始检测" showCategories />
+    <p class="note">检测公网网站的 HTTP/HTTPS 服务。结果来自检测时的公开响应，供排查参考。</p>
+  </section>
+  <section class="checks">
+    <h2>可以检测什么</h2>
+    <div class="grid">
+      {checkIds
+        .filter((id) => id !== 'get-ip')
+        .map((id) => (
+          <a class="check-card" href={`/${id}`}>
+            <h3>{checks[id].title}</h3>
+            <p>{checks[id].summary}</p>
+          </a>
+        ))}
+    </div>
+  </section>
+  <section class="help">
+    <h2>使用说明</h2>
+    <p>填写 example.com 或完整网址，点击“开始检测”。各项结果会陆续显示，失败的检测可以单独重试。</p>
+    <p>网站的网络位置、防护设置与检测时间会影响结果；没有读到某项信息，不代表网站一定存在问题。</p>
+    <a href="/faq">常见问题与结果说明 →</a>
+  </section>
+</PageLayout>
+<style>
+  .hero {
+    padding: clamp(2rem, 7vw, 6rem) 0 3rem;
+    max-width: 58rem;
+  }
+  .eyebrow {
+    color: var(--primary);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+  }
+  h1 {
+    font-size: clamp(2.2rem, 6vw, 4.4rem);
+    line-height: 1.25;
+    margin: 1rem 0;
+  }
+  h1 span {
+    color: var(--primary);
+    margin-left: 0.35em;
+  }
+  .intro {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+  .note,
+  .check-card p {
+    color: var(--text-color-secondary);
+    line-height: 1.7;
+  }
+  .note {
+    font-size: 0.85rem;
+    margin-top: 1rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    gap: 1rem;
+  }
+  .check-card {
+    padding: 1.3rem;
+    border: 1px solid var(--primary-transparent);
+    border-radius: 0.75rem;
+    background: var(--background-raised);
+    color: inherit;
+  }
+  .check-card:hover {
+    border-color: var(--primary);
+    text-decoration: none;
+  }
+  .check-card h3 {
+    margin: 0 0 0.7rem;
+    color: var(--primary);
+    font-size: 1.1rem;
+  }
+  .check-card p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .help {
+    max-width: 54rem;
+    line-height: 1.8;
+  }
+</style>

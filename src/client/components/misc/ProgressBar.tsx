@@ -237,7 +237,7 @@ const ShowLoadStateButton = styled.button`
   }
 `;
 
-const DismissButton = styled.button`
+const 收起Button = styled.button`
   width: fit-content;
   position: absolute;
   right: 1rem;
@@ -289,9 +289,9 @@ interface JobListItemProps {
 }
 
 const REASON_LABEL: Partial<Record<LoadingState, string>> = {
-  error: '■ Show Error',
-  'timed-out': '■ Show Timeout Reason',
-  skipped: '■ Show Skip Reason',
+  error: '■ 查看失败原因',
+  'timed-out': '■ 查看超时原因',
+  skipped: '■ 查看跳过原因',
 };
 
 // One row in the details list, showing job state, time and any actions
@@ -308,7 +308,7 @@ const JobListItem = ({ job, showJobDocs, showErrorModal }: JobListItemProps): Re
       <i>{timeTaken && state !== 'loading' ? ` Took ${timeTaken} ms` : ''}</i>
       {canRetry && (
         <FailedJobActionButton type="button" onClick={retry}>
-          ↻ Retry
+          ↻ 重试
         </FailedJobActionButton>
       )}
       {reasonLabel && (
@@ -329,15 +329,15 @@ interface LoadSummaryProps {
   onOpen: () => void;
 }
 
-// Compact one-liner shown alongside the "Show Load State" button when collapsed
+// Compact one-liner shown alongside the "查看检测进度" button when collapsed
 const LoadSummary = ({ jobs, elapsedMs, onOpen }: LoadSummaryProps): ReactNode => {
   const total = jobs.length;
   const c = countByState(jobs);
   const issues = c.error + c['timed-out'] + c.skipped;
   const sec = (elapsedMs / 1000).toFixed(1);
   const text = c.loading
-    ? `Loading ${total - c.loading} of ${total}` + (elapsedMs < 15000 ? ` (${sec}s)` : '')
-    : `Finished ${total} lookups in ${sec}s`;
+    ? `检测中 ${total - c.loading} / ${total}` + (elapsedMs < 15000 ? ` (${sec}s)` : '')
+    : `已完成 ${total} 项检测，耗时 ${sec} 秒`;
   return (
     <span className="summary">
       {text}
@@ -345,7 +345,7 @@ const LoadSummary = ({ jobs, elapsedMs, onOpen }: LoadSummaryProps): ReactNode =
         <>
           {' · '}
           <button type="button" className="extras" onClick={onOpen}>
-            {issues} {issues === 1 ? 'issue' : 'issues'}
+            {issues} 项需查看
           </button>
         </>
       )}
@@ -356,10 +356,10 @@ const LoadSummary = ({ jobs, elapsedMs, onOpen }: LoadSummaryProps): ReactNode =
 type ChipKey = Exclude<LoadingState, 'loading'>;
 
 const CHIP_LABEL: Record<ChipKey, string> = {
-  success: 'successful',
-  skipped: 'skipped',
-  'timed-out': 'timed out',
-  error: 'failed',
+  success: '成功',
+  skipped: '跳过',
+  'timed-out': '超时',
+  error: '失败',
 };
 
 interface SummaryTextProps {
@@ -377,14 +377,14 @@ const SummaryText = ({ jobs, elapsedMs }: SummaryTextProps): ReactNode => {
   const chip = (k: ChipKey) =>
     c[k] > 0 && (
       <span key={k} className={k}>
-        {c[k]} {c[k] === 1 ? 'job' : 'jobs'} {CHIP_LABEL[k]}{' '}
+        {c[k]} 项 {CHIP_LABEL[k]}{' '}
       </span>
     );
   const cls = !isDone ? 'loading-info' : hasIssues ? 'error-info' : 'success-info';
   const heading = !isDone
-    ? `Loading ${total - c.loading} / ${total} Jobs`
+    ? `检测中 ${total - c.loading} / ${total} 项`
     : !hasIssues
-      ? `${c.success} Jobs Completed Successfully`
+      ? `${c.success} 项检测成功`
       : null;
   const keys: ChipKey[] = !isDone
     ? ['skipped', 'timed-out', 'error']
@@ -395,7 +395,7 @@ const SummaryText = ({ jobs, elapsedMs }: SummaryTextProps): ReactNode => {
     <SummaryContainer className={cls}>
       {heading && <b>{heading}</b>}
       {keys.map(chip)}
-      <span className="elapsed">{isDone ? `Done in ${elapsed}` : elapsed}</span>
+      <span className="elapsed">{isDone ? `耗时 ${elapsed}` : elapsed}</span>
     </SummaryContainer>
   );
 };
@@ -445,7 +445,7 @@ const ProgressLoader = ({ loadStatus, showModal, showJobDocs }: ProgressLoaderPr
               onOpen={() => setHideLoader(false)}
             />
             <ShowLoadStateButton type="button" onClick={() => setHideLoader(false)}>
-              Show Load State
+              查看检测进度
             </ShowLoadStateButton>
           </ReShowRow>
         </div>
@@ -465,7 +465,7 @@ const ProgressLoader = ({ loadStatus, showModal, showJobDocs }: ProgressLoaderPr
             </ProgressBarContainer>
             <SummaryText jobs={loadStatus} elapsedMs={elapsedMs} />
             <Details>
-              <summary>Show Details</summary>
+              <summary>查看详情</summary>
               <ul>
                 {loadStatus.map((job) => (
                   <JobListItem
@@ -478,19 +478,18 @@ const ProgressLoader = ({ loadStatus, showModal, showJobDocs }: ProgressLoaderPr
               </ul>
               {loadStatus.some((j) => j.state === 'error') && (
                 <p className="error">
-                  <b>Check the browser console for logs and more info</b>
+                  <b>部分项目未返回结果，可查看具体原因或单独重试</b>
                   <br />
-                  It's normal for some jobs to fail, either because the host doesn't return the
-                  required info, or restrictions in the lambda function, or hitting an API limit.
+                  目标未提供对应信息、网络限制或超时都可能影响结果。
                 </p>
               )}
               <AboutPageLink href="/checks" target="_blank" rel="noreferrer">
-                Learn More about Web-Check
+                查看检测说明
               </AboutPageLink>
             </Details>
-            <DismissButton type="button" onClick={() => setHideLoader(true)}>
-              Dismiss
-            </DismissButton>
+            <收起Button type="button" onClick={() => setHideLoader(true)}>
+              收起
+            </收起Button>
           </LoadCard>
         </div>
       </Collapsible>

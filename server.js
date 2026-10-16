@@ -7,6 +7,8 @@ import express from 'express';
 import rateLimit from 'express-rate-limit';
 
 import { shouldSkip } from './api/_common/check-skipper.js';
+import { assertPublicTarget } from './api/_common/public-target.js';
+import siteConfig from './site-config.json' with { type: 'json' };
 
 // Load environment variables from .env file
 dotenv.config();
@@ -61,6 +63,7 @@ app.get('/healthz', (req, res) => {
     // Routes register async, so we're listening a moment before they're actually live
     ready: Object.keys(handlers).length === apiFiles.length,
     version,
+    revision: process.env.BUILD_REVISION || 'development',
     uptime: Math.round(process.uptime()),
     timestamp: new Date().toISOString(),
   });
@@ -75,10 +78,8 @@ const limits = [
 
 // Construct a message to be returned if the user has been rate-limited
 const makeLimiterResponseMsg = (retryAfter) => {
-  const why =
-    'This keeps the service running smoothly for everyone. ' +
-    'You can get around these limits by running your own instance of Web Check.';
-  return `You've been rate-limited, please try again in ${retryAfter} seconds.\n${why}`;
+  const why = '为保证公共服务可用，请稍后再试。';
+  return `检测请求过于频繁，请稍后重试。\n${why}`;
 };
 
 // Create rate limiters for each time frame
@@ -96,6 +97,22 @@ const limiters = limits.map((limit) =>
 if (process.env.API_ENABLE_RATE_LIMIT === 'true') {
   app.use(API_DIR, limiters);
 }
+
+// Restrict the public instance to documented checks and public HTTP/HTTPS targets.
+// This runs before every handler; bridge egress rules enforce destination limits again.
+app.use(API_DIR, async (req, res, next) => {
+  res.set('X-Robots-Tag', 'noindex, nofollow');
+  const check = req.path.split('/').filter(Boolean)[0];
+  if (!check || !siteConfig.checks.includes(check)) {
+    return res.status(404).json({ error: '本站未提供此检测接口。' });
+  }
+  try {
+    await assertPublicTarget(req.query.url);
+    next();
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 // Read and register each API function as an Express routes
 apiFiles.forEach(async (dirent) => {
@@ -133,70 +150,6 @@ const renderPlaceholderPage = async (res, msgId, logs) => {
   const htmlContent = placeholderContent.replace('<!-- CONTENT -->', errorMessage);
   res.status(500).send(htmlContent);
 };
-
-// Create a single API endpoint to execute all lambda functions
-app.get(API_DIR, async (req, res) => {
-  const results = {};
-  const { url } = req.query;
-  const maxExecutionTime = process.env.PUBLIC_API_TIMEOUT_LIMIT || 60000;
-
-  const executeHandler = async (handler, req) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const mockRes = {
-          status: () => mockRes,
-          json: (body) => resolve({ body }),
-        };
-        await handler({ ...req, query: { url } }, mockRes);
-      } catch (err) {
-        reject(err);
-      }
-    });
-  };
-
-  const timeout = (ms, jobName = null) => {
-    return new Promise((_, reject) => {
-      setTimeout(() => {
-        reject(
-          new Error(
-            `Timed out after ${ms / 1000} seconds${jobName ? `, when executing ${jobName}` : ''}`,
-          ),
-        );
-      }, ms);
-    });
-  };
-
-  const handlerPromises = Object.entries(handlers).map(async ([route, handler]) => {
-    const routeName = route.replace(`${API_DIR}/`, '');
-
-    const { skip, reason } = shouldSkip(routeName, url);
-    if (skip) {
-      results[routeName] = { skipped: reason };
-      return;
-    }
-
-    try {
-      const result = await Promise.race([
-        executeHandler(handler, req, res),
-        timeout(maxExecutionTime, routeName),
-      ]);
-      results[routeName] = result.body;
-    } catch (err) {
-      results[routeName] = { error: err.message };
-    }
-  });
-
-  await Promise.all(handlerPromises);
-  res.json(results);
-});
-
-// Skip the marketing homepage, for self-hosted users
-app.use((req, res, next) => {
-  if (req.path === '/' && process.env.BOSS_SERVER !== 'true' && !process.env.DISABLE_GUI) {
-    return res.redirect(302, '/check');
-  }
-  next();
-});
 
 // Serve up the GUI - if build dir exists, and GUI feature enabled
 if (process.env.DISABLE_GUI && process.env.DISABLE_GUI !== 'false') {
