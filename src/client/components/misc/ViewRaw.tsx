@@ -65,7 +65,7 @@ const ViewRaw = (props: { everything: { id: string; result: any }[] }) => {
       }),
     });
     if (!response.ok) {
-      setError(`HTTP error! status: ${response.status}`);
+      setError(`在线查看失败（HTTP ${response.status}）`);
     } else {
       setError(null);
     }
@@ -82,24 +82,23 @@ const ViewRaw = (props: { everything: { id: string; result: any }[] }) => {
     URL.revokeObjectURL(url);
   };
   return (
-    <Card heading="View / Download Raw Data" styles={CardStyles}>
+    <Card heading="查看与下载检测数据" styles={CardStyles}>
       <div className="controls">
-        <Button onClick={handleDownload}>Download Results</Button>
-        <Button onClick={fetchResultsUrl}>{resultUrl ? 'Update Results' : 'View Results'}</Button>
-        {resultUrl && <Button onClick={() => setResultUrl('')}>Hide Results</Button>}
+        <Button onClick={handleDownload}>下载 JSON</Button>
+        <Button onClick={fetchResultsUrl}>{resultUrl ? '更新在线结果' : '在线查看'}</Button>
+        {resultUrl && <Button onClick={() => setResultUrl('')}>收起结果</Button>}
       </div>
       {resultUrl && !error && (
         <>
-          <StyledIframe title="Results, via JSON Hero" src={resultUrl} />
+          <StyledIframe title="检测结果（由 JSON Hero 提供）" src={resultUrl} />
           <small>
-            Your results are available to view <a href={resultUrl}>here</a>.
+            可<a href={resultUrl}>打开在线结果</a>查看。
           </small>
         </>
       )}
       {error && <p className="error">{error}</p>}
       <small>
-        These are the raw results generated from your URL, and in JSON format. You can import these
-        into your own program, for further analysis.
+        下载的数据为 JSON 格式，可导入其他程序继续分析。在线查看使用第三方服务 JSON Hero。
       </small>
     </Card>
   );

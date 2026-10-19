@@ -2,6 +2,7 @@
 import PageLayout from '@layouts/Page.astro';
 import NavBar from '@components/scafold/Nav.astro';
 import Footer from '@components/scafold/Footer.astro';
+import ScanForm from '@components/form/ScanForm.astro';
 import Main from '../client/main.tsx';
 import { determineAddressType } from '../client/utils/address-type-checker';
 import '../client/styles/index.css';
@@ -41,7 +42,7 @@ const site = target?.includes('/') ? undefined : target?.replace(/^www\./, '');
             href={`https://${target}`}
             target="_blank"
             rel="noreferrer"
-            aria-label={`Visit ${site}`}
+            aria-label={`访问 ${site}`}
           >
             <img src="/favicon.svg" alt="" width="32" height="32" />
           </a>
@@ -52,11 +53,39 @@ const site = target?.includes('/') ? undefined : target?.replace(/^www\./, '');
   ) : (
     <NavBar slot="nav" />
   )}
+  <div class="scan-again">
+    <ScanForm label="检测其他网站" buttonLabel="开始检测" />
+    <a class="retry-current" href={Astro.url.pathname} data-astro-reload>
+      重新检测当前网站
+    </a>
+  </div>
   <Main client:only="react" />
   <Footer slot="footer" miniView />
 </PageLayout>
 
 <style lang="scss">
+  .scan-again {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border: 1px solid var(--primary-transparent);
+    border-radius: 4px;
+    background: var(--background-raised);
+
+    :global(.scan-form) {
+      flex: 1 1 30rem;
+    }
+
+    .retry-current {
+      align-self: center;
+      color: var(--primary);
+      font-size: 0.9rem;
+    }
+  }
+
   .tool {
     padding: 0.3rem 0.8rem;
     border: 1px solid var(--primary-transparent);

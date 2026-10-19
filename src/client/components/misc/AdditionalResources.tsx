@@ -9,7 +9,7 @@ const ResourceListOuter = styled.ul`
   padding: 1rem;
   display: grid;
   gap: 0.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
   li a.resource-wrap {
     display: flex;
     flex-direction: column;
@@ -104,14 +104,14 @@ const resources: Resource[] = [
     title: 'Hudson Rock',
     link: 'https://hudsonrock.com/free-tools/?=webcheck',
     icon: 'https://pixelflare.cc/alicia/icons/hudson-rock.png/w128',
-    description: 'Identify Infostealer infection data related to domains and emails',
+    description: '查询与域名、邮箱相关的窃密木马感染记录',
     categories: ['security'],
   },
   {
     title: 'SSL Labs Test',
     link: 'https://ssllabs.com/ssltest/analyze.html',
     icon: 'https://pixelflare.cc/alicia/icons/qualys-ssl-labs.png/w128',
-    description: 'Analyzes the SSL configuration of a server and grades it',
+    description: '分析服务器的 SSL/TLS 配置并给出评级',
     searchLink: 'https://www.ssllabs.com/ssltest/analyze.html?d={DOMAIN}',
     categories: ['security', 'server'],
   },
@@ -119,7 +119,7 @@ const resources: Resource[] = [
     title: 'Virus Total',
     link: 'https://virustotal.com',
     icon: 'https://pixelflare.cc/alicia/icons/virustotal.png/w128',
-    description: 'Checks a URL against multiple antivirus engines',
+    description: '使用多个安全引擎查询域名或网址风险',
     searchLink: 'https://www.virustotal.com/gui/domain/{DOMAIN}',
     categories: ['security'],
   },
@@ -127,7 +127,7 @@ const resources: Resource[] = [
     title: 'Shodan',
     link: 'https://shodan.io/',
     icon: 'https://pixelflare.cc/alicia/icons/shodan.png/w128',
-    description: 'Search engine for Internet-connected devices',
+    description: '搜索互联网设备与公开服务信息',
     searchLink: 'https://www.shodan.io/search/report?query={DOMAIN}',
     categories: ['security', 'server'],
   },
@@ -135,7 +135,7 @@ const resources: Resource[] = [
     title: 'Archive',
     link: 'https://archive.org/',
     icon: 'https://pixelflare.cc/alicia/icons/internet-archive.png/w128',
-    description: 'View previous versions of a site via the Internet Archive',
+    description: '通过互联网档案馆查看网站的历史快照',
     searchLink: 'https://web.archive.org/web/*/{URL}',
     categories: ['seo'],
   },
@@ -143,7 +143,7 @@ const resources: Resource[] = [
     title: 'URLScan',
     link: 'https://urlscan.io/',
     icon: 'https://pixelflare.cc/alicia/icons/urlscan.png/w128',
-    description: 'Scans a URL and provides information about the page',
+    description: '查询网址扫描记录与页面信息',
     searchLink: 'https://urlscan.io/domain/{DOMAIN}',
     categories: ['security', 'privacy'],
   },
@@ -151,7 +151,7 @@ const resources: Resource[] = [
     title: 'Sucuri SiteCheck',
     link: 'https://sitecheck.sucuri.net/',
     icon: 'https://pixelflare.cc/alicia/icons/sucuri.png/w128',
-    description: 'Checks a URL against blacklists and known threats',
+    description: '检查网址是否涉及黑名单或已知威胁',
     searchLink: 'https://sitecheck.sucuri.net/results/{DOMAIN}',
     categories: ['security'],
   },
@@ -159,7 +159,7 @@ const resources: Resource[] = [
     title: 'Domain Tools',
     link: 'https://whois.domaintools.com/',
     icon: 'https://pixelflare.cc/alicia/icons/domaintools.png/w128',
-    description: 'Run a WhoIs lookup on a domain',
+    description: '查询域名的 WHOIS 注册信息',
     searchLink: 'https://whois.domaintools.com/{DOMAIN}',
     categories: ['domain', 'privacy'],
   },
@@ -167,7 +167,7 @@ const resources: Resource[] = [
     title: 'NS Lookup',
     link: 'https://nslookup.io/',
     icon: 'https://pixelflare.cc/alicia/icons/nslookup.png/w128',
-    description: 'View DNS records for a domain',
+    description: '查询域名的 DNS 记录',
     searchLink: 'https://www.nslookup.io/domains/{DOMAIN}/dns-records/',
     categories: ['domain', 'email'],
   },
@@ -175,7 +175,7 @@ const resources: Resource[] = [
     title: 'DNS Checker',
     link: 'https://dnschecker.org/',
     icon: 'https://pixelflare.cc/alicia/icons/dns-checker.png/w128',
-    description: 'Check global DNS propagation across multiple servers',
+    description: '检查不同地区服务器上的 DNS 解析情况',
     searchLink: 'https://dnschecker.org/#A/{DOMAIN}',
     categories: ['domain'],
   },
@@ -183,7 +183,7 @@ const resources: Resource[] = [
     title: 'Censys',
     link: 'https://search.censys.io/',
     icon: 'https://pixelflare.cc/alicia/icons/censys.png/w128',
-    description: 'Lookup hosts associated with a domain',
+    description: '查询与域名关联的主机和公开服务',
     searchLink: 'https://search.censys.io/search?resource=hosts&q={DOMAIN}',
     categories: ['security', 'server'],
   },
@@ -191,7 +191,7 @@ const resources: Resource[] = [
     title: 'Page Speed Insights',
     link: 'https://developers.google.com/speed/pagespeed/insights/',
     icon: 'https://pixelflare.cc/alicia/icons/page-speed-insights.png/w128',
-    description: 'Checks the performance, accessibility and SEO of a page on mobile + desktop',
+    description: '检查手机和桌面页面的性能、无障碍与 SEO',
     searchLink: 'https://developers.google.com/speed/pagespeed/insights/?url={URL}',
     categories: ['performance', 'seo'],
   },
@@ -199,7 +199,7 @@ const resources: Resource[] = [
     title: 'Built With',
     link: 'https://builtwith.com/',
     icon: 'https://pixelflare.cc/alicia/icons/built-with.png/w128',
-    description: 'View the tech stack of a website',
+    description: '查看网站使用的技术与服务',
     searchLink: 'https://builtwith.com/{DOMAIN}',
     categories: ['server', 'privacy'],
   },
@@ -207,14 +207,14 @@ const resources: Resource[] = [
     title: 'DNS Dumpster',
     link: 'https://dnsdumpster.com/',
     icon: 'https://pixelflare.cc/alicia/icons/dnsdumpster.png/w128',
-    description: "DNS recon tool, to map out a domain from it's DNS records",
+    description: '通过 DNS 记录查看域名关联的主机与子域名',
     categories: ['domain', 'security'],
   },
   {
     title: 'BGP Tools',
     link: 'https://bgp.tools/',
     icon: 'https://pixelflare.cc/alicia/icons/bgp-tools.png/w128',
-    description: 'View realtime BGP data for any ASN, Prefix or DNS',
+    description: '查询 ASN、IP 网段或域名的实时 BGP 信息',
     searchLink: 'https://bgp.tools/dns/{DOMAIN}',
     categories: ['server', 'domain'],
   },
@@ -222,7 +222,7 @@ const resources: Resource[] = [
     title: 'Similar Web',
     link: 'https://similarweb.com/',
     icon: 'https://pixelflare.cc/alicia/icons/similar-web.png/w128',
-    description: 'View approx traffic and engagement stats for a website',
+    description: '查看网站访问量与用户参与情况的估算数据',
     searchLink: 'https://similarweb.com/website/{DOMAIN}/',
     categories: ['seo'],
   },
@@ -230,7 +230,7 @@ const resources: Resource[] = [
     title: 'Blacklist Checker',
     link: 'https://blacklistchecker.com/',
     icon: 'https://pixelflare.cc/alicia/icons/black-list-checker.png/w128',
-    description: 'Check if a domain, IP or email is present on the top blacklists',
+    description: '查询域名、IP 或邮箱是否出现在常见黑名单中',
     searchLink: 'https://blacklistchecker.com/check?input={DOMAIN}',
     categories: ['security', 'email'],
   },
@@ -238,7 +238,7 @@ const resources: Resource[] = [
     title: 'Cloudflare Radar',
     link: 'https://radar.cloudflare.com/',
     icon: 'https://pixelflare.cc/alicia/icons/cloudflare.png/w128',
-    description: 'View traffic source locations for a domain through Cloudflare',
+    description: '通过 Cloudflare 查看域名的流量来源等信息',
     searchLink: 'https://radar.cloudflare.com/domains/domain/{DOMAIN}',
     categories: ['seo'],
   },
@@ -246,8 +246,7 @@ const resources: Resource[] = [
     title: 'Mozilla HTTP Observatory',
     link: 'https://developer.mozilla.org/en-US/observatory',
     icon: 'https://pixelflare.cc/alicia/icons/mozilla.png/w128',
-    description:
-      'Assesses website security posture by analyzing various security headers and practices',
+    description: '分析 HTTP 安全响应头与配置，评估网站安全情况',
     searchLink: 'https://developer.mozilla.org/en-US/observatory/analyze?host={DOMAIN}',
     categories: ['security', 'privacy'],
   },
@@ -255,7 +254,7 @@ const resources: Resource[] = [
     title: 'AbuseIPDB',
     link: 'https://abuseipdb.com/',
     icon: 'https://pixelflare.cc/alicia/icons/abuseipdb.png/w128',
-    description: 'Check if a domain or IP has been reported for abusive activity',
+    description: '查询域名或 IP 是否有滥用行为举报记录',
     searchLink: 'https://www.abuseipdb.com/check?query={DOMAIN}',
     categories: ['security', 'server'],
   },
@@ -263,7 +262,7 @@ const resources: Resource[] = [
     title: 'IBM X-Force Exchange',
     link: 'https://exchange.xforce.ibmcloud.com/',
     icon: 'https://pixelflare.cc/alicia/icons/ibm-x-force-exchange.png/w128',
-    description: 'View shared human and machine generated threat intelligence',
+    description: '查询人工与自动化系统共享的威胁情报',
     searchLink: 'https://exchange.xforce.ibmcloud.com/url/{URL_ENCODED}',
     categories: ['security'],
   },
@@ -271,7 +270,7 @@ const resources: Resource[] = [
     title: 'URLVoid',
     link: 'https://urlvoid.com/',
     icon: 'https://pixelflare.cc/alicia/icons/urlvoid.png/w128',
-    description: 'Checks a website across 30+ blocklist engines and website reputation services',
+    description: '综合多个黑名单引擎与信誉服务查询网站风险',
     searchLink: 'https://urlvoid.com/scan/{DOMAIN}',
     categories: ['security'],
   },
@@ -279,7 +278,7 @@ const resources: Resource[] = [
     title: 'URLhaus',
     link: 'https://urlhaus.abuse.ch/',
     icon: 'https://pixelflare.cc/alicia/icons/urlhaus.png/w128',
-    description: "Checks if the site is in URLhaus's malware URL exchange",
+    description: '查询网址是否出现在 URLhaus 恶意软件网址库中',
     searchLink: 'https://urlhaus.abuse.ch/browse.php?search={URL_ENCODED}',
     categories: ['security'],
   },
@@ -287,14 +286,14 @@ const resources: Resource[] = [
     title: 'ANY.RUN',
     link: 'https://any.run/',
     icon: 'https://pixelflare.cc/alicia/icons/anyrun.png/w128',
-    description: 'An interactive malware and web sandbox',
+    description: '使用交互式沙箱分析恶意软件与网页',
     categories: ['security'],
   },
   {
     title: 'Blacklight',
     link: 'https://themarkup.org/blacklight',
     icon: 'https://pixelflare.cc/alicia/icons/the-markup.png/w128',
-    description: 'Reveals the trackers, cookies and fingerprinting a site uses on its visitors',
+    description: '检查网站使用的跟踪器、Cookie 与浏览器指纹技术',
     searchLink: 'https://themarkup.org/blacklight?url={DOMAIN}',
     categories: ['privacy', 'security'],
   },
@@ -330,7 +329,7 @@ const AdditionalResources = ({
     : resources;
   if (!shown.length) return null;
   return (
-    <Card heading="External Tools for Further Research" styles={CardStyles}>
+    <Card heading="第三方检测工具" styles={CardStyles}>
       <ResourceListOuter>
         {shown.map((resource, index) => {
           return (
@@ -342,11 +341,7 @@ const AdditionalResources = ({
                 href={makeLink(resource, url)}
               >
                 <p className="resource-title">{resource.title}</p>
-                <span
-                  className="resource-link"
-                  onClick={() => window.open(resource.link, '_blank')}
-                  title={`Open: ${resource.link}`}
-                >
+                <span className="resource-link" title={`打开 ${resource.title}`}>
                   {new URL(resource.link).hostname}
                 </span>
                 <div className="resource-lower">
@@ -361,14 +356,8 @@ const AdditionalResources = ({
         })}
       </ResourceListOuter>
       <Note>
-        These tools are not affiliated with Web-Check. Please use them at your own risk.
-        <br />
-        At the time of listing, all of the above were available and free to use - if this changes,
-        please report it via GitHub (
-        <a target="_blank" rel="noreferrer" href="https://github.com/lissy93/web-check">
-          lissy93/web-check
-        </a>
-        ).
+        点击卡片可在新标签页打开第三方工具，部分查询会自动填入当前域名。
+        这些服务由各自的网站提供，功能、收费与使用规则以对应网站为准。
       </Note>
     </Card>
   );

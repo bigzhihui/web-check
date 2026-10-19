@@ -103,7 +103,7 @@ const NoResults = ({ address, error, kind = 'unreachable' }: Props): JSX.Element
       </Heading>
       <p>{description}</p>
       <code className="target">{address}</code>
-      <p>Possible reasons:</p>
+      <p>可能的原因：</p>
       <ul className="reasons">
         {reasons.map((r) => (
           <li key={r}>{r}</li>
@@ -111,7 +111,7 @@ const NoResults = ({ address, error, kind = 'unreachable' }: Props): JSX.Element
       </ul>
       {error && (
         <span className="detail">
-          {kind === 'blocked' ? 'Reason' : 'Lookup error'}: {error}
+          {kind === 'blocked' ? '原因' : '查询错误'}：{error}
         </span>
       )}
     </Wrapper>
