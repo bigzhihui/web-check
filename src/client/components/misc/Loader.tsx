@@ -191,10 +191,10 @@ const Chip = (props: { x: number; y: number; done: number; total: number }): JSX
       <rect className="chip" x={left} y={top} width={CHIP.width} height={CHIP.height} rx={6} />
       <circle className="via" cx={left + 14} cy={top + 14} r={4} />
       <text className="chip-label" x={props.x} y={props.y - 8} textAnchor="middle">
-        Crunching data
+        正在检测
       </text>
       <text className="chip-count" x={props.x} y={props.y + 14} textAnchor="middle">
-        {props.done} / {props.total} checks
+        {props.done} / {props.total} 项
       </text>
     </g>
   );
@@ -223,7 +223,7 @@ const Loader = (props: { show: boolean; jobs: LoadingJob[] }): JSX.Element => {
 
   return (
     <LoaderContainer className={show ? '' : 'finished'}>
-      <svg ref={boardRef} role="img" aria-label={`Crunching data, ${done} of ${jobs.length} done`}>
+      <svg ref={boardRef} role="img" aria-label={`正在检测，已完成 ${done} / ${jobs.length} 项`}>
         {traces.map(({ job, path, pad, bend, label }, i) => (
           <g key={job.id} className={`trace ${job.state}`}>
             <path className="wire" d={path} />
