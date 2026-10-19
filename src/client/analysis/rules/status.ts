@@ -8,11 +8,11 @@ export const checkResponseTime = (ms: number): Result | null => {
   if (ms >= VERY_SLOW_MS) {
     return {
       severity: 'warning',
-      title: `Slow response time: ${Math.round(ms)}ms`,
-      detail: 'Investigate server performance, caching or CDN coverage',
+      title: `响应较慢：${Math.round(ms)} 毫秒`,
+      detail: '可检查服务器性能、缓存命中情况与 CDN 覆盖',
     };
   }
-  if (ms >= SLOW_MS) return { severity: 'info', title: `Response time over ${SLOW_MS}ms` };
+  if (ms >= SLOW_MS) return { severity: 'info', title: `响应时间超过 ${SLOW_MS} 毫秒` };
   return null;
 };
 
@@ -21,7 +21,7 @@ const status: Analyzer = (d) => {
   const out: ReturnType<Analyzer> = [];
   const code = Number(d.responseCode);
   if (Number.isFinite(code)) {
-    out.push({ severity: 'pass', title: `Site responded with ${code}` });
+    out.push({ severity: 'pass', title: `网站返回状态码 ${code}` });
   }
   const slow = checkResponseTime(Number(d.responseTime));
   if (slow) out.push(slow);

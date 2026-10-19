@@ -48,8 +48,8 @@ const robotsTxt: Analyzer = (d) => {
     return [
       {
         severity: 'warning',
-        title: 'robots.txt blocks Google from the entire site',
-        detail: "Confirm this is intentional, otherwise the site won't appear in Google search",
+        title: 'robots.txt 已禁止 Google 抓取整个网站',
+        detail: '请确认这是预期设置；禁止抓取可能影响 Google 发现和更新网页内容',
       },
     ];
   }

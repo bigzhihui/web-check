@@ -7,12 +7,12 @@ const ContentLinksCard = (props: { data: any; title: string; actionButtons: any 
   const external: string[] = props.data.external || [];
   return (
     <Card heading={props.title} actionButtons={props.actionButtons}>
-      <Section title="Summary">
-        <Row lbl="Internal Link Count" val={internal.length} />
-        <Row lbl="External Link Count" val={external.length} />
+      <Section title="链接概况">
+        <Row lbl="站内链接数" val={internal.length} />
+        <Row lbl="外部链接数" val={external.length} />
       </Section>
       {internal.length > 0 && (
-        <Section title="Internal Links" collapsible>
+        <Section title="站内链接" collapsible>
           {internal.map((link) => (
             <Row key={link}>
               <a href={link} target="_blank" rel="noreferrer">
@@ -23,7 +23,7 @@ const ContentLinksCard = (props: { data: any; title: string; actionButtons: any 
         </Section>
       )}
       {external.length > 0 && (
-        <Section title="External Links" collapsible>
+        <Section title="外部链接" collapsible>
           {external.map((link) => (
             <Row key={link}>
               <a href={link} target="_blank" rel="noreferrer">

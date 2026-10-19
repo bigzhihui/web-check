@@ -31,17 +31,17 @@ const DocContent = (id: string) => {
         {doc.title}
       </Heading>
       <Heading as="h4" size="small">
-        About
+        检测说明
       </Heading>
       <p className="doc-desc">{doc.description}</p>
       <Heading as="h4" size="small">
-        Use Cases
+        适用场景
       </Heading>
       <p className="doc-uses">{doc.use}</p>
       {doc.resources.length > 0 && (
         <>
           <Heading as="h4" size="small">
-            Links
+            参考链接
           </Heading>
           <ul>
             {doc.resources.map((resource, index) =>
@@ -65,7 +65,7 @@ const DocContent = (id: string) => {
     </JobDocsContainer>
   ) : (
     <JobDocsContainer>
-      <p>No Docs provided for this widget yet</p>
+      <p>此检测项目暂未提供更多说明</p>
     </JobDocsContainer>
   );
 };

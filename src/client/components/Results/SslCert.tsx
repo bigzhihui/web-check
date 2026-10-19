@@ -5,22 +5,22 @@ import { REASONS, checkExpiry } from 'client/analysis/rules/ssl';
 
 function getExtendedKeyUsage(oids: string[]) {
   const oidMap: { [key: string]: string } = {
-    '1.3.6.1.5.5.7.3.1': 'TLS Web Server Authentication',
-    '1.3.6.1.5.5.7.3.2': 'TLS Web Client Authentication',
-    '1.3.6.1.5.5.7.3.3': 'Code Signing',
-    '1.3.6.1.5.5.7.3.4': 'Email Protection (SMIME)',
-    '1.3.6.1.5.5.7.3.8': 'Time Stamping',
-    '1.3.6.1.5.5.7.3.9': 'OCSP Signing',
-    '1.3.6.1.5.5.7.3.5': 'IPSec End System',
-    '1.3.6.1.5.5.7.3.6': 'IPSec Tunnel',
-    '1.3.6.1.5.5.7.3.7': 'IPSec User',
-    '1.3.6.1.5.5.8.2.2': 'IKE Intermediate',
-    '2.16.840.1.113730.4.1': 'Netscape Server Gated Crypto',
-    '1.3.6.1.4.1.311.10.3.3': 'Microsoft Server Gated Crypto',
-    '1.3.6.1.4.1.311.10.3.4': 'Microsoft Encrypted File System',
-    '1.3.6.1.4.1.311.20.2.2': 'Microsoft Smartcard Logon',
-    '1.3.6.1.4.1.311.10.3.12': 'Microsoft Document Signing',
-    '0.9.2342.19200300.100.1.3': 'Email Address (in Subject Alternative Name)',
+    '1.3.6.1.5.5.7.3.1': 'TLS 网站服务器认证',
+    '1.3.6.1.5.5.7.3.2': 'TLS 客户端认证',
+    '1.3.6.1.5.5.7.3.3': '代码签名',
+    '1.3.6.1.5.5.7.3.4': '邮件保护（SMIME）',
+    '1.3.6.1.5.5.7.3.8': '时间戳签名',
+    '1.3.6.1.5.5.7.3.9': 'OCSP 签名',
+    '1.3.6.1.5.5.7.3.5': 'IPSec 终端',
+    '1.3.6.1.5.5.7.3.6': 'IPSec 隧道',
+    '1.3.6.1.5.5.7.3.7': 'IPSec 用户',
+    '1.3.6.1.5.5.8.2.2': 'IKE 中间证书',
+    '2.16.840.1.113730.4.1': 'Netscape 服务器加密',
+    '1.3.6.1.4.1.311.10.3.3': 'Microsoft 服务器加密',
+    '1.3.6.1.4.1.311.10.3.4': 'Microsoft 加密文件系统',
+    '1.3.6.1.4.1.311.20.2.2': 'Microsoft 智能卡登录',
+    '1.3.6.1.4.1.311.10.3.12': 'Microsoft 文档签名',
+    '0.9.2342.19200300.100.1.3': '备用名称中的邮箱地址',
   };
   const results = oids.map((oid) => oidMap[oid] || oid);
   return results.filter((item, index) => results.indexOf(item) === index);
@@ -50,41 +50,39 @@ const SslCertCard = (props: { data: any; title: string; actionButtons: any }): J
     .filter(Boolean);
   return (
     <Card heading={props.title} actionButtons={props.actionButtons}>
-      {subject && <Row lbl="Subject" val={subject.CN} />}
-      {issuer?.O && <Row lbl="Issuer" val={issuer.O} />}
+      {subject && <Row lbl="证书主体" val={subject.CN} />}
+      {issuer?.O && <Row lbl="签发机构" val={issuer.O} />}
       {typeof sslCert.isValid === 'boolean' && (
         <Row
-          lbl="Trusted"
+          lbl="是否受信任"
           val={sslCert.isValid}
-          no={`No (${sslCert.authError})`}
+          no={`否（${sslCert.authError}）`}
           reason={REASONS[sslCert.authError]}
           term="certificate-trust"
         />
       )}
-      {key && <Row lbl="Public Key" val={key} />}
+      {key && <Row lbl="公钥" val={key} />}
       {valid_to && (
         <Row
-          lbl="Expires"
+          lbl="到期日期"
           val={valid_to}
           term="certificate-expiry"
           {...fromFinding(checkExpiry(valid_to))}
         />
       )}
-      {valid_from && <Row lbl="Renewed" val={valid_from} />}
-      {days > 0 && <Row lbl="Lifetime" val={`${days} days`} />}
-      {serialNumber && <Row lbl="Serial Num" val={serialNumber} />}
-      {fingerprint && <Row lbl="Fingerprint" val={fingerprint} />}
+      {valid_from && <Row lbl="签发日期" val={valid_from} />}
+      {days > 0 && <Row lbl="有效天数" val={`${days} 天`} />}
+      {serialNumber && <Row lbl="序列号" val={serialNumber} />}
+      {fingerprint && <Row lbl="证书指纹" val={fingerprint} />}
       {altNames.length > 0 && (
         <ExpandableRow
-          lbl="Alternative Names"
+          lbl="备用域名"
           val={altNames.length}
           rowList={altNames.map((name: string) => ({ lbl: name }))}
         />
       )}
-      {sslCert.chain?.length > 0 && <ListRow title="Certificate Chain" list={sslCert.chain} />}
-      {ext_key_usage && (
-        <ListRow title="Extended Key Usage" list={getExtendedKeyUsage(ext_key_usage)} />
-      )}
+      {sslCert.chain?.length > 0 && <ListRow title="证书链" list={sslCert.chain} />}
+      {ext_key_usage && <ListRow title="扩展密钥用途" list={getExtendedKeyUsage(ext_key_usage)} />}
     </Card>
   );
 };

@@ -8,19 +8,19 @@ const caaRecords: Analyzer = (d) => {
     return [
       {
         severity: 'warning',
-        title: records.length ? 'CAA records have no issue tag' : 'No CAA records',
-        detail: 'Any certificate authority can issue certificates for this domain',
+        title: records.length ? 'CAA 记录未包含 issue 标记' : '未设置 CAA 记录',
+        detail: '域名未限制可为其签发证书的证书机构',
       },
     ];
   }
   const issuers = [...new Set(issue.map((r) => r.value.split(';')[0].trim()).filter(Boolean))];
   if (!issuers.length) {
-    return [{ severity: 'info', title: 'CAA blocks all certificate issuance' }];
+    return [{ severity: 'info', title: 'CAA 已禁止所有证书机构签发证书' }];
   }
   return [
     {
       severity: 'pass',
-      title: `CAA limits issuance to ${issuers.length} CA(s)`,
+      title: `CAA 将证书签发限制为 ${issuers.length} 家证书机构`,
       detail: issuers.join(', '),
     },
   ];

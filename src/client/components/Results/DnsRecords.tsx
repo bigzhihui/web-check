@@ -8,7 +8,7 @@ const styles = `
 const DnsRecordsCard = (props: { data: any; title: string; actionButtons: any }): JSX.Element => {
   const dns = props.data;
   const mx = (dns.MX || []).map((r: any) =>
-    typeof r === 'string' ? r : `${r.exchange} (priority ${r.priority})`,
+    typeof r === 'string' ? r : `${r.exchange}（优先级 ${r.priority}）`,
   );
   const soa = dns.SOA ? [`${dns.SOA.nsname} (${dns.SOA.hostmaster})`] : [];
   return (
@@ -23,10 +23,10 @@ const DnsRecordsCard = (props: { data: any; title: string; actionButtons: any })
       {dns.SRV?.length > 0 && (
         <ListRow
           title="SRV"
-          list={dns.SRV.map((r: any) => `${r.name}:${r.port} (priority ${r.priority})`)}
+          list={dns.SRV.map((r: any) => `${r.name}:${r.port}（优先级 ${r.priority}）`)}
         />
       )}
-      {dns.TXT?.length > 0 && <Row lbl="TXT" val={`${dns.TXT.length} records`} />}
+      {dns.TXT?.length > 0 && <Row lbl="TXT" val={`${dns.TXT.length} 条记录`} />}
     </Card>
   );
 };

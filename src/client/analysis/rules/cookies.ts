@@ -18,13 +18,13 @@ const parseCookies = (raw: unknown): Array<{ name: string; attrs: string[] }> =>
 export const checkCookie = (name: string, attrs: string[]): Result[] => {
   const out: Result[] = [];
   if (!attrs.includes('secure')) {
-    out.push({ severity: 'issue', title: `Cookie "${name}" missing Secure flag` });
+    out.push({ severity: 'issue', title: `Cookie“${name}”缺少 Secure 属性` });
   }
   if (!attrs.includes('httponly')) {
-    out.push({ severity: 'warning', title: `Cookie "${name}" missing HttpOnly flag` });
+    out.push({ severity: 'warning', title: `Cookie“${name}”缺少 HttpOnly 属性` });
   }
   if (!attrs.includes('samesite')) {
-    out.push({ severity: 'warning', title: `Cookie "${name}" missing SameSite flag` });
+    out.push({ severity: 'warning', title: `Cookie“${name}”缺少 SameSite 属性` });
   }
   return out;
 };
@@ -35,7 +35,7 @@ const cookies: Analyzer = (d) => {
   if (!parsed.length) return [];
   const out = parsed.flatMap(({ name, attrs }) => checkCookie(name, attrs));
   if (!out.length)
-    out.push({ severity: 'pass', title: 'All cookies use Secure/HttpOnly/SameSite' });
+    out.push({ severity: 'pass', title: '所有 Cookie 均设置了 Secure、HttpOnly 和 SameSite' });
   return out;
 };
 

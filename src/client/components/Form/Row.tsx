@@ -134,7 +134,7 @@ const isDateLike = (value: any): boolean => {
 };
 
 const formatDate = (dateString: string): string => {
-  return new Intl.DateTimeFormat('en-GB', {
+  return new Intl.DateTimeFormat('zh-CN', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -142,7 +142,7 @@ const formatDate = (dateString: string): string => {
 };
 
 // The text shown for a value, with dates formatted and booleans as yes or no
-const valueText = ({ val, yes = 'Yes', no = 'No' }: RowProps): string => {
+const valueText = ({ val, yes = '是', no = '否' }: RowProps): string => {
   if (typeof val === 'boolean') return val ? yes : no;
   return isDateLike(val) ? formatDate(val as string) : String(val ?? '');
 };

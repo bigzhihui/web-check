@@ -7,10 +7,10 @@ import { SEVERITIES, type Result, type Severity } from 'client/analysis/types';
 export type Status = 'pass' | 'info' | 'warning' | 'error';
 
 const STATUSES: Record<Status, { icon: IconDefinition; color: string; label: string }> = {
-  pass: { icon: faCheck, color: colors.success, label: 'Pass' },
-  info: { icon: faInfo, color: colors.info, label: 'Info' },
-  warning: { icon: faExclamation, color: colors.warning, label: 'Warning' },
-  error: { icon: faXmark, color: colors.danger, label: 'Error' },
+  pass: { icon: faCheck, color: colors.success, label: '通过' },
+  info: { icon: faInfo, color: colors.info, label: '信息' },
+  warning: { icon: faExclamation, color: colors.warning, label: '提醒' },
+  error: { icon: faXmark, color: colors.danger, label: '错误' },
 };
 
 const Svg = styled.svg`

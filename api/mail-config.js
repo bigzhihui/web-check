@@ -203,7 +203,7 @@ const mailConfigHandler = async (url) => {
     const parentDmarc = dmarc.length ? [] : withPrefix(parentDmarcTxt, 'v=dmarc1');
 
     if (!mxRecords.length && !spf.length && !dmarc.length && parent !== domain) {
-      return { skipped: 'No mail server in use on this domain' };
+      return { skipped: '此域名未使用邮件服务器，已跳过邮件配置检测' };
     }
 
     return {
@@ -225,9 +225,9 @@ const mailConfigHandler = async (url) => {
     };
   } catch (error) {
     if (error.code === 'ENOTFOUND') {
-      return { skipped: 'No mail server in use on this domain' };
+      return { skipped: '此域名未使用邮件服务器，已跳过邮件配置检测' };
     }
-    return { error: `Mail config lookup failed: ${error.message}` };
+    return { error: `邮件配置查询失败：${error.message}` };
   }
 };
 

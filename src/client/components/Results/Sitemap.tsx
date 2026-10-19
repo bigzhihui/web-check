@@ -5,9 +5,9 @@ import { getPath } from 'client/utils/result-processor';
 // Rows shown when a page is expanded, skipping any the sitemap leaves out
 const details = (page: any) =>
   [
-    { lbl: 'Last Modified', val: page.lastmod?.[0] },
-    { lbl: 'Change Frequency', val: page.changefreq?.[0] },
-    { lbl: 'Priority', val: page.priority?.[0] },
+    { lbl: '最后修改', val: page.lastmod?.[0] },
+    { lbl: '更新频率', val: page.changefreq?.[0] },
+    { lbl: '优先级', val: page.priority?.[0] },
   ].filter((row) => row.val);
 
 const SitemapCard = (props: { data: any; title: string; actionButtons: any }): JSX.Element => {
@@ -18,9 +18,7 @@ const SitemapCard = (props: { data: any; title: string; actionButtons: any }): J
       {pages.map((page: any, index: number) => (
         <ExpandableRow key={index} lbl={getPath(page.loc[0])} rowList={details(page)} />
       ))}
-      {sitemaps.length > 0 && (
-        <p>This site returns a sitemap index, which is a list of sitemaps.</p>
-      )}
+      {sitemaps.length > 0 && <p>该网站返回了站点地图索引，其中包含多个站点地图。</p>}
       {sitemaps.map((sitemap: any, index: number) => (
         <Row key={index}>
           <a href={sitemap.loc[0]}>{getPath(sitemap.loc[0])}</a>

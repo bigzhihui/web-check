@@ -16,31 +16,31 @@ const RobotsTxtCard = (props: {
   const robots = data?.robots || [];
   const crawlers = AI_CRAWLERS.map((name) => ({
     lbl: name,
-    val: blocksCrawler(robots, name) ? 'Blocked' : 'Allowed',
+    val: blocksCrawler(robots, name) ? '已阻止' : '允许',
   }));
-  const blocked = crawlers.filter((crawler) => crawler.val === 'Blocked').length;
+  const blocked = crawlers.filter((crawler) => crawler.val === '已阻止').length;
   const [googleBlocked] = robotsTxt(data);
 
   return (
     <Card heading={props.title} actionButtons={props.actionButtons} styles={cardStyles}>
-      {robots.length === 0 && <p>No crawl rules found.</p>}
+      {robots.length === 0 && <p>未发现抓取规则。</p>}
       {robots.length > 0 && (
         <>
           <Row
-            lbl="Google Search"
-            val={googleBlocked ? 'Blocked' : 'Allowed'}
+            lbl="Google 搜索抓取"
+            val={googleBlocked ? '已阻止' : '允许'}
             term="search-crawling"
             {...fromFinding(googleBlocked)}
           />
           <ExpandableRow
-            lbl="AI Crawlers Blocked"
-            val={`${blocked} of ${crawlers.length}`}
+            lbl="已阻止的 AI 爬虫"
+            val={`${blocked} / ${crawlers.length}`}
             rowList={crawlers}
           />
         </>
       )}
       {typeof data?.llmsTxt === 'boolean' && (
-        <Row lbl="llms.txt" val={data.llmsTxt ? 'Found' : 'Not found'} />
+        <Row lbl="llms.txt" val={data.llmsTxt ? '已发现' : '未发现'} />
       )}
       {robots.map((row, index) => {
         return <Row key={`${row.lbl}-${index}`} lbl={row.lbl} val={row.val} />;

@@ -52,7 +52,7 @@ const reducer = (s: JobsState, a: Action): JobsState => {
 
 const isTimeout = (msg = '') => /timed[- ]?out/i.test(msg);
 
-const noIpMsg = "Skipped, because the target's IP address could not be found";
+const noIpMsg = '未能取得目标网站的 IP 地址，已跳过相关检测';
 
 const apiBase = (import.meta.env.PUBLIC_API_ENDPOINT || '/api') as string;
 
@@ -122,7 +122,7 @@ const useJobs = (address: string, addressType: AddressType, jobs: JobSpec[]) => 
         .catch((err: any) => {
           if (controller.signal.aborted || err?.name === 'AbortError') return;
           const timeTaken = Date.now() - startTime;
-          const message = err?.message || 'Unknown error';
+          const message = err?.message || '未知错误';
           if (job.id === 'get-ip') {
             skipIpJobs(noIpMsg);
             return;
@@ -152,11 +152,11 @@ const useJobs = (address: string, addressType: AddressType, jobs: JobSpec[]) => 
       const allowed = job.expectedAddressTypes;
       if (allowed && !allowed.includes(addressType)) {
         if (addressType === 'ipV4' || addressType === 'ipV6') {
-          return 'This check requires a domain name and cannot be run against an IP address';
+          return '此项目需要域名，不能直接检测 IP 地址';
         }
-        return `This check is only available for ${allowed.join(', ')} input`;
+        return `此项目仅适用于 ${allowed.join('、')} 类型的输入`;
       }
-      return 'This check is not applicable for the current input';
+      return '此检测项目不适用于当前输入';
     },
     [addressType],
   );
@@ -164,7 +164,7 @@ const useJobs = (address: string, addressType: AddressType, jobs: JobSpec[]) => 
   // Initial fan-out: fire non-IP jobs immediately, mark unsupported as skipped
   useEffect(() => {
     if (keys.disableEverything) {
-      const reason = 'Web-Check has been temporarily disabled on this instance';
+      const reason = '本站检测服务已暂时停用';
       jobs.forEach((j) => skipJob(j, reason));
       return;
     }
@@ -232,7 +232,7 @@ const useJobs = (address: string, addressType: AddressType, jobs: JobSpec[]) => 
         type: 'error',
         cardIds: stuck,
         outcome: 'timed-out',
-        error: 'Client-side timeout reached',
+        error: '浏览器等待检测结果超时',
         timeTaken: Date.now() - startTime,
       });
       stuck.forEach((id) => {

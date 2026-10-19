@@ -11,16 +11,19 @@ const verdict = (message, compatible = false, hstsHeader = null) => ({
 });
 
 const evaluate = (header) => {
-  if (!header) return verdict('Site does not serve any HSTS headers.');
+  if (!header) return verdict('网站未返回 HSTS 响应头。');
   const lower = header.toLowerCase();
   const maxAge = Number(/max-age\s*=\s*"?(\d+)/.exec(lower)?.[1] || 0);
   if (maxAge < MIN_MAX_AGE)
-    return verdict(`HSTS max-age is ${maxAge}, below the ${MIN_MAX_AGE} minimum.`, false, header);
+    return verdict(
+      `HSTS 有效期为 ${maxAge} 秒，低于预加载要求的 ${MIN_MAX_AGE} 秒。`,
+      false,
+      header,
+    );
   if (!lower.includes('includesubdomains'))
-    return verdict('HSTS header does not include all subdomains.', false, header);
-  if (!lower.includes('preload'))
-    return verdict('HSTS header does not contain the preload directive.', false, header);
-  return verdict('Site is compatible with the HSTS preload list!', true, header);
+    return verdict('HSTS 未包含 includeSubDomains，策略未覆盖所有子域名。', false, header);
+  if (!lower.includes('preload')) return verdict('HSTS 未包含 preload 预加载指令。', false, header);
+  return verdict('网站配置符合 HSTS 预加载要求。', true, header);
 };
 
 // Read HSTS from the first HTTPS response, without following redirects, unless a bot check hid it
@@ -33,7 +36,7 @@ const hstsHandler = async (url) => {
     if (!header && isBotCheck(response)) return BOT_CHECK_ERROR;
     return evaluate(header);
   } catch (error) {
-    return { error: `HSTS check failed: ${error.code || error.message}` };
+    return { error: `HSTS 检测失败：${error.code || error.message}` };
   }
 };
 

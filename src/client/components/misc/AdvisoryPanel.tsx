@@ -30,8 +30,8 @@ const META: Record<Severity, SevMeta> = {
     icon: faTriangleExclamation,
     defaultOpen: false,
   },
-  info: { label: 'Informational', color: colors.info, icon: faCircleInfo, defaultOpen: false },
-  pass: { label: 'Passes', color: colors.success, icon: faCircleCheck, defaultOpen: false },
+  info: { label: '参考信息', color: colors.info, icon: faCircleInfo, defaultOpen: false },
+  pass: { label: '已通过', color: colors.success, icon: faCircleCheck, defaultOpen: false },
 };
 
 const Wrapper = styled(Card)`

@@ -6,23 +6,23 @@ export const checkHops = (chain: string[]): Result | null => {
   if (hops >= 4) {
     return {
       severity: 'warning',
-      title: `Long redirect chain: ${hops} hops`,
-      detail: 'Collapse intermediate redirects to reduce latency',
+      title: `跳转链较长：${hops} 次跳转`,
+      detail: '可减少中间跳转，降低访问耗时',
     };
   }
-  return hops > 0 ? { severity: 'info', title: `${hops} redirect hop(s)` } : null;
+  return hops > 0 ? { severity: 'info', title: `共 ${hops} 次跳转` } : null;
 };
 
 // Whether a chain that starts on HTTP ends up on HTTPS, or null when it starts on HTTPS
 export const checkHttps = (chain: string[]): Result | null => {
   if (!/^http:\/\//i.test(chain[0])) return null;
   if (/^https:\/\//i.test(chain[chain.length - 1])) {
-    return { severity: 'pass', title: 'HTTP requests are redirected to HTTPS' };
+    return { severity: 'pass', title: 'HTTP 请求已跳转到 HTTPS' };
   }
   return {
     severity: 'critical',
-    title: 'Site does not enforce HTTPS',
-    detail: 'Add a permanent redirect from http:// to https://',
+    title: '网站未将 HTTP 强制跳转到 HTTPS',
+    detail: '可将 http:// 永久跳转到 https://',
   };
 };
 

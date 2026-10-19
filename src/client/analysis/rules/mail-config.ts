@@ -47,34 +47,33 @@ export const checkSpf = (d: MailData): Result => {
   if (!spf.length) {
     return {
       severity: 'issue',
-      title: 'No SPF record found',
-      detail:
-        'Publish a v=spf1 TXT record listing the servers allowed to send mail for this domain, or v=spf1 -all if it sends none',
+      title: '未发现 SPF 记录',
+      detail: '可发布 v=spf1 TXT 记录列出授权发件服务器；不发送邮件的域名可评估设置 v=spf1 -all',
     };
   }
   if (spf.length > 1) {
     return {
       severity: 'issue',
-      title: 'Multiple SPF records found',
-      detail: 'Receivers treat this as an SPF error, so merge them into a single v=spf1 record',
+      title: '发现多条 SPF 记录',
+      detail: '多条记录会导致 SPF 错误，应合并为一条 v=spf1 记录',
     };
   }
   if ((d.spfLookups ?? 0) > 10) {
     return {
       severity: 'issue',
-      title: `SPF record needs ${d.spfLookups} DNS lookups, over the limit of 10`,
+      title: `SPF 需要 ${d.spfLookups} 次 DNS 查询，超过 10 次限制`,
       detail:
-        'Receivers stop at 10 and treat SPF as failed. Remove includes you no longer use, or replace some with ip4/ip6 ranges',
+        '超过 10 次查询会导致 SPF 失败，可移除不再使用的 include，或评估用 ip4/ip6 网段替代部分查询',
     };
   }
   if (!spfFailsUnlisted(spf[0])) {
     return {
       severity: 'warning',
-      title: "SPF record doesn't fail unlisted senders",
-      detail: 'End the record with -all or ~all so mail from servers it does not list fails SPF',
+      title: 'SPF 未限制未列出的发件服务器',
+      detail: '可按发件需求评估以 -all 或 ~all 结束记录，限制未授权发件服务器',
     };
   }
-  return { severity: 'pass', title: 'SPF record published' };
+  return { severity: 'pass', title: '已发布 SPF 记录' };
 };
 
 export const checkDmarc = (d: MailData): Result => {
@@ -82,41 +81,40 @@ export const checkDmarc = (d: MailData): Result => {
   if (!dmarc.length) {
     return {
       severity: 'issue',
-      title: 'No DMARC record found',
-      detail:
-        'Publish a v=DMARC1 TXT record on the _dmarc subdomain so receivers can act on spoofed mail',
+      title: '未发现 DMARC 记录',
+      detail: '可在 _dmarc 子域名发布 v=DMARC1 TXT 记录，供收件方处理伪造邮件',
     };
   }
   if (dmarc.length > 1) {
     return {
       severity: 'issue',
-      title: 'Multiple DMARC records found',
-      detail: 'Receivers ignore DMARC when there is more than one record, so merge them into one',
+      title: '发现多条 DMARC 记录',
+      detail: '多条记录会导致收件方忽略 DMARC，应合并为一条记录',
     };
   }
   const tags = parseTags(dmarc[0]);
   const tag = d.dmarcDomain && tags.sp ? 'sp' : 'p';
   const policy = tags[tag]?.toLowerCase();
-  const from = d.dmarcDomain ? ` (from ${d.dmarcDomain})` : '';
+  const from = d.dmarcDomain ? `（来自 ${d.dmarcDomain}）` : '';
   const percent = tags.pct ? Number(tags.pct) : 100;
   if (!enforced(policy)) {
-    const next = `set ${tag}=quarantine or ${tag}=reject`;
+    const next = `设置 ${tag}=quarantine 或 ${tag}=reject`;
     return {
       severity: 'warning',
-      title: `DMARC policy is monitor-only${from}`,
+      title: `DMARC 策略仅监测${from}`,
       detail: tags.rua
-        ? `Mail that fails DMARC is still delivered. Once reports show your own mail passing, ${next}`
-        : `Mail that fails DMARC is still delivered, and no reports are sent. Add rua=mailto:<address> to get reports, then ${next}`,
+        ? `未通过 DMARC 的邮件仍可投递；确认合法邮件均能通过后，可${next}`
+        : `未通过 DMARC 的邮件仍可投递，且未设置报告接收地址；可添加 rua=mailto:<address>，核对报告后再${next}`,
     };
   }
   if (percent < 100) {
     return {
       severity: 'warning',
-      title: `DMARC policy only applies to ${percent}% of failing mail${from}`,
-      detail: 'Raise pct to 100, or remove it, so the policy applies to all failing mail',
+      title: `DMARC 策略仅覆盖 ${percent}% 的验证失败邮件${from}`,
+      detail: '可将 pct 调整为 100 或移除此参数，使策略覆盖所有验证失败邮件',
     };
   }
-  return { severity: 'pass', title: `DMARC policy: ${policy}${from}` };
+  return { severity: 'pass', title: `DMARC 策略：${policy}${from}` };
 };
 
 export const checkSubdomainDmarc = (d: MailData): Result | null => {
@@ -126,8 +124,8 @@ export const checkSubdomainDmarc = (d: MailData): Result | null => {
   if (!sp || !enforced(p) || enforced(sp)) return null;
   return {
     severity: 'warning',
-    title: "DMARC policy doesn't cover subdomains",
-    detail: `sp=${sp} lets spoofed mail from subdomains through. Set sp=quarantine or sp=reject, or remove sp so subdomains follow p`,
+    title: 'DMARC 策略未覆盖子域名',
+    detail: `sp=${sp} 允许子域名伪造邮件通过；可评估设置 sp=quarantine、sp=reject，或移除 sp 以继承 p 策略`,
   };
 };
 
@@ -137,33 +135,32 @@ export const checkDkim = (d: MailData): Result => {
   const weak = keys.filter((key) => key.bits && key.bits < 1024);
   const short = keys.filter((key) => key.bits === 1024);
   if (!keys.length && sendsNoMail(d)) {
-    return { severity: 'pass', title: "Domain sends no mail, so DKIM isn't needed" };
+    return { severity: 'pass', title: '此域名声明不发送邮件，无需 DKIM' };
   }
   if (!keys.length) {
     return {
       severity: 'info',
-      title: 'No DKIM key found on common selectors',
+      title: '常见选择器下未发现 DKIM 公钥',
       detail:
-        "DKIM can use any selector name, so it may be set up under one we don't check. " +
-        'If not, publish a DKIM key so receivers can verify your mail',
+        'DKIM 可使用任意选择器名称，可能已配置在本次未检查的选择器下。' +
+        '若尚未配置，可发布 DKIM 公钥供收件方验证邮件',
     };
   }
   if (weak.length) {
     return {
       severity: 'issue',
-      title: `DKIM key under 1024 bits (${names(weak)})`,
-      detail: 'Receivers ignore signatures from keys this short. Replace it with a 2048-bit key',
+      title: `DKIM 密钥不足 1024 位（${names(weak)}）`,
+      detail: '过短密钥的签名可能被收件方忽略，可替换为 2048 位密钥',
     };
   }
   if (short.length) {
     return {
       severity: 'info',
-      title: `1024-bit DKIM key (${names(short)})`,
-      detail:
-        '2048-bit keys are recommended. Rotate to a 2048-bit key, or ask your mail provider to',
+      title: `DKIM 使用 1024 位密钥（${names(short)}）`,
+      detail: '可评估更换为 2048 位密钥，或联系邮件服务提供商处理',
     };
   }
-  return { severity: 'pass', title: `DKIM key found (${names(keys)})` };
+  return { severity: 'pass', title: `已发现 DKIM 公钥（${names(keys)}）` };
 };
 
 // The hosts that receive this domain's mail, from its MX records
@@ -183,16 +180,15 @@ export const checkMtaSts = (d: MailData): Result | null => {
   if (!policy) {
     return {
       severity: 'info',
-      title: 'MTA-STS not set up',
-      detail: 'Without it, mail sent to this domain can be forced back to unencrypted delivery',
+      title: '未配置 MTA-STS',
+      detail: '未设置此策略时，邮件传输可能被降级为非加密连接',
     };
   }
   if (!policy.mode) {
     return {
       severity: 'warning',
-      title: 'MTA-STS policy is unreadable or invalid',
-      detail:
-        'Senders need one v=STSv1 record, and a valid mta-sts.<domain>/.well-known/mta-sts.txt',
+      title: 'MTA-STS 策略无法读取或无效',
+      detail: '需要一条 v=STSv1 记录及有效的 mta-sts.<domain>/.well-known/mta-sts.txt 策略文件',
     };
   }
   const patterns = policy.mx.map((pattern) => pattern.toLowerCase().replace(/\.$/, ''));
@@ -200,30 +196,29 @@ export const checkMtaSts = (d: MailData): Result | null => {
   if (missing.length && policy.mode !== 'none') {
     return {
       severity: policy.mode === 'enforce' ? 'issue' : 'warning',
-      title: `MTA-STS policy leaves out ${missing.join(', ')}`,
-      detail:
-        'Senders refuse to deliver to MX hosts an enforced policy leaves out, so add mx: lines',
+      title: `MTA-STS 策略未覆盖 ${missing.join('、')}`,
+      detail: '强制策略下，发件方会拒绝向未覆盖的 MX 主机投递，可核对并补充 mx: 配置',
     };
   }
   if (policy.mode !== 'enforce') {
     return {
       severity: 'info',
-      title: `MTA-STS is in ${policy.mode} mode`,
-      detail: 'Switch the policy to mode: enforce once TLS reports show mail arriving encrypted',
+      title: `MTA-STS 当前模式为 ${policy.mode}`,
+      detail: '确认 TLS 报告显示邮件能正常加密投递后，可评估切换为 mode: enforce',
     };
   }
-  return { severity: 'pass', title: 'MTA-STS policy enforced' };
+  return { severity: 'pass', title: 'MTA-STS 已启用强制策略' };
 };
 
 export const checkTlsRpt = (d: MailData): Result | null => {
   if (!d.mtaSts && !d.dane?.length) return null;
   if (findRecords(d.txtRecords, 'v=TLSRPTv1').length) {
-    return { severity: 'pass', title: 'TLS-RPT reports set up' };
+    return { severity: 'pass', title: '已配置 TLS-RPT 报告' };
   }
   return {
     severity: 'info',
-    title: 'No TLS-RPT record',
-    detail: 'Publish a v=TLSRPTv1 TXT record on _smtp._tls, to hear when mail to you fails TLS',
+    title: '未设置 TLS-RPT 记录',
+    detail: '可在 _smtp._tls 发布 v=TLSRPTv1 TXT 记录，以接收邮件 TLS 传输失败报告',
   };
 };
 
@@ -232,7 +227,7 @@ const checkDane = (d: MailData): Result | null => {
   if (!d.dane?.length) return null;
   return {
     severity: 'pass',
-    title: `DANE TLSA records on ${d.dane.length} of ${hosts.length} MX host(s)`,
+    title: `${hosts.length} 个 MX 主机中有 ${d.dane.length} 个设置了 DANE TLSA 记录`,
   };
 };
 

@@ -11,32 +11,32 @@ const SecurityTxtCard = (props: { data: any; title: string; actionButtons: any }
   return (
     <Card heading={props.title} actionButtons={props.actionButtons}>
       <Row
-        lbl="Present"
+        lbl="是否存在"
         val={!!isPresent}
         status={isPresent ? 'pass' : 'warning'}
         term="security-txt"
       />
       {isPresent && (
         <>
-          <Row lbl="File Location" val={foundIn} />
+          <Row lbl="文件位置" val={foundIn} />
           <Row
-            lbl="PGP Signed"
+            lbl="是否有 PGP 签名"
             val={!!isPgpSigned}
             status={isPgpSigned ? 'pass' : 'info'}
             term="security-txt-signature"
           />
           {contact && (
             <Row
-              lbl="Contact"
-              val="Missing"
+              lbl="联系方式"
+              val="未设置"
               term="security-txt-contact"
               {...fromFinding(contact)}
             />
           )}
           {!getField(fields, 'expires') && (
             <Row
-              lbl="Expires"
-              val="Missing"
+              lbl="到期日期"
+              val="未设置"
               term="security-txt-expires"
               {...fromFinding(expires)}
             />
@@ -54,17 +54,12 @@ const SecurityTxtCard = (props: { data: any; title: string; actionButtons: any }
               />
             );
           })}
-          <Section title="View Full Policy" collapsible>
+          <Section title="查看完整原文" collapsible>
             <Row plaintext={content} />
           </Section>
         </>
       )}
-      {!isPresent && (
-        <Note>
-          Having a security.txt ensures security researchers know how and where to safely report
-          vulnerabilities.
-        </Note>
-      )}
+      {!isPresent && <Note>security.txt 用于告知安全研究人员如何联系网站并报告安全问题。</Note>}
     </Card>
   );
 };

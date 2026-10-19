@@ -908,8 +908,52 @@ export const termGroups: { title: string; terms: Record<string, Term> }[] = [
 
 export type TermId = keyof typeof glossary;
 
+// Chinese explanations for checks available on this public instance.
+const resultExplanations: Partial<Record<TermId, string>> = {
+  'certificate-trust': '证书是否适用于当前域名，并由浏览器信任的证书机构签发。',
+  'certificate-expiry': '证书超过到期日期后会失效，需在到期前完成续期。',
+  'cookie-security':
+    'Secure 限制 Cookie 通过 HTTPS 发送；HttpOnly 限制脚本读取；SameSite 控制跨站请求携带 Cookie。',
+  'search-crawling':
+    'robots.txt 用于声明爬虫抓取规则，禁止抓取可能影响搜索引擎发现和更新网页内容。',
+  redirects: '跳转链展示从初始网址到最终网址经过的 HTTP 跳转，过多跳转会增加访问耗时。',
+  'https-redirect': '将 HTTP 请求跳转到 HTTPS，可使后续连接使用加密传输。',
+  'response-time': '响应耗时反映本次检测的网络连接与服务器响应速度，受检测位置和网络情况影响。',
+  caa: 'CAA 是声明哪些证书机构可以为域名签发证书的 DNS 记录。',
+  'strict-transport-security': 'HSTS 告知浏览器在指定有效期内只通过 HTTPS 访问此网站。',
+  'hsts-max-age': 'max-age 表示 HSTS 策略有效的秒数；HSTS 预加载要求至少达到一年。',
+  'hsts-include-subdomains':
+    'includeSubDomains 将 HSTS 策略应用到所有子域名，启用前需确认相关子域名支持 HTTPS。',
+  'hsts-preload': 'preload 用于声明申请浏览器预加载列表的意愿；实际加入还需满足条件并提交申请。',
+  'security-txt': 'security.txt 用于公开安全问题的联系与报告方式。',
+  'security-txt-signature': 'PGP 签名可帮助安全研究人员核对 security.txt 的真实性。',
+  'security-txt-contact': 'Contact 字段提供安全问题的联系地址，例如邮箱或漏洞报告网址。',
+  'security-txt-expires': 'Expires 字段说明 security.txt 的到期时间，便于定期核对联系信息。',
+  'open-graph': 'OpenGraph 标签用于描述网页在社交平台分享时的标题、说明和预览图片。',
+  'twitter-card': 'Twitter 分享卡片标签控制网页在 X 等平台上的分享预览样式。',
+  spf: 'SPF 通过 DNS TXT 记录声明哪些服务器可以代表域名发送邮件。',
+  dkim: 'DKIM 通过邮件签名和 DNS 公钥，帮助收件方验证邮件来源及内容完整性。',
+  dmarc: 'DMARC 声明对未通过域名身份验证邮件的处理策略，也可配置验证报告的接收地址。',
+  bimi: 'BIMI 允许符合条件的邮件在支持的客户端中展示品牌标志。',
+  'mta-sts': 'MTA-STS 允许域名声明邮件投递应使用受信任的 TLS 连接。',
+  'tls-rpt': 'TLS-RPT 提供邮件 TLS 传输失败的报告接收方式。',
+  dane: 'DANE 通过受 DNSSEC 保护的 TLSA 记录声明服务器应使用的证书信息。',
+  'content-security-policy':
+    'Content-Security-Policy 限制页面可加载和运行的资源来源，帮助降低脚本注入等风险。',
+  'x-content-type-options': 'X-Content-Type-Options: nosniff 限制浏览器猜测响应内容类型。',
+  'x-frame-options': 'X-Frame-Options 限制页面能否被其他网站嵌入，帮助降低点击劫持风险。',
+  'referrer-policy': 'Referrer-Policy 控制浏览器跳转或请求资源时发送哪些来源网址信息。',
+  'permissions-policy': 'Permissions-Policy 控制页面可使用的摄像头、麦克风等浏览器能力。',
+  'cross-origin-opener-policy': 'Cross-Origin-Opener-Policy 控制不同来源窗口之间的隔离方式。',
+  'cross-origin-resource-policy': 'Cross-Origin-Resource-Policy 控制其他来源能否加载此网站的资源。',
+  'cross-origin-embedder-policy':
+    'Cross-Origin-Embedder-Policy 声明页面加载跨来源资源时的隔离要求。',
+  'x-xss-protection': 'X-XSS-Protection 是旧浏览器的反射型脚本过滤机制，现代浏览器已弃用此机制。',
+};
+
 // What a term means for a row, using its pass or fail wording when it has one
 export const termText = (id: TermId, passed: boolean): string => {
+  if (resultExplanations[id]) return resultExplanations[id];
   const term: Term = glossary[id];
   return (passed ? term.pass : term.fail) ?? term.definition;
 };

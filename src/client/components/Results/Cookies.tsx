@@ -36,7 +36,7 @@ const CookiesCard = (props: { data: any; title: string; actionButtons: any }): J
   const noCookies = !headerCookies.length && !clientCookies.length;
   return (
     <Card heading={props.title} actionButtons={props.actionButtons}>
-      {noCookies && <Row lbl="Cookies" val="None" />}
+      {noCookies && <Row lbl="Cookies" val="无" />}
       {headerCookies.map((cookie, index) => {
         const attributes = Object.keys(cookie.attributes).map((key: string) => {
           return { lbl: key, val: cookie.attributes[key] || true };
@@ -44,7 +44,7 @@ const CookiesCard = (props: { data: any; title: string; actionButtons: any }): J
         return (
           <ExpandableRow
             key={`header-cookie-${index}-${cookie.name}`}
-            lbl={cookie.name || '(unnamed)'}
+            lbl={cookie.name || '（未命名）'}
             val={cookie.value}
             term="cookie-security"
             {...cookieStatus(cookie)}

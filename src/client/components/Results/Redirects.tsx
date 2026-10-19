@@ -25,15 +25,10 @@ const RedirectsCard = (props: { data: any; title: string; actionButtons: any }):
   const upgrade = checkHttps(chain);
   return (
     <Card heading={props.title} actionButtons={props.actionButtons} styles={cardStyles}>
-      <Row
-        lbl="Redirects Followed"
-        val={count || 'None'}
-        term="redirects"
-        {...fromFinding(checkHops(chain))}
-      />
+      <Row lbl="跳转次数" val={count || '无'} term="redirects" {...fromFinding(checkHops(chain))} />
       {upgrade && (
         <Row
-          lbl="Redirects to HTTPS"
+          lbl="是否跳转到 HTTPS"
           val={upgrade.severity === 'pass'}
           term="https-redirect"
           {...fromFinding(upgrade)}

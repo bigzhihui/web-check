@@ -173,9 +173,16 @@ if (process.env.DISABLE_GUI && process.env.DISABLE_GUI !== 'false') {
     }
     next();
   });
-  app.use(express.static(guiPath));
+  app.use(
+    express.static(guiPath, {
+      setHeaders(res, filePath) {
+        if (filePath.endsWith('.html')) res.setHeader('Cache-Control', 'no-cache');
+      },
+    }),
+  );
   app.use(async (req, res, next) => {
     if (req.path.startsWith(`${API_DIR}/`)) return next();
+    res.set('Cache-Control', 'no-cache');
     const ssrHandlerPath = path.join(__dirname, 'dist', 'server', 'entry.mjs');
     import(ssrHandlerPath)
       .then(({ handler: ssrHandler }) => {

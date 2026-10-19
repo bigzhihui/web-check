@@ -10,8 +10,8 @@ const headers: Analyzer = (d) => {
     if (val) {
       out.push({
         severity: 'info',
-        title: `Server discloses ${key}`,
-        detail: `Value: ${String(val).slice(0, 80)}`,
+        title: `服务器公开了 ${key} 响应头`,
+        detail: `取值：${String(val).slice(0, 80)}`,
       });
     }
   }

@@ -15,12 +15,12 @@ export interface LoadingJob {
   retry?: () => void;
 }
 
-const STATE_META: Record<LoadingState, { emoji: string; color: string }> = {
-  success: { emoji: '✅', color: colors.success },
-  loading: { emoji: '🔄', color: colors.info },
-  error: { emoji: '❌', color: colors.danger },
-  'timed-out': { emoji: '⏸️', color: colors.warning },
-  skipped: { emoji: '⏭️', color: colors.neutral },
+const STATE_META: Record<LoadingState, { emoji: string; color: string; label: string }> = {
+  success: { label: '成功', emoji: '✅', color: colors.success },
+  loading: { label: '检测中', emoji: '🔄', color: colors.info },
+  error: { label: '失败', emoji: '❌', color: colors.danger },
+  'timed-out': { label: '超时', emoji: '⏸️', color: colors.warning },
+  skipped: { label: '跳过', emoji: '⏭️', color: colors.neutral },
 };
 
 // Tally jobs by their loading state in a single pass
@@ -304,8 +304,8 @@ const JobListItem = ({ job, showJobDocs, showErrorModal }: JobListItemProps): Re
       <button type="button" className="docs" onClick={() => showJobDocs(id)}>
         {STATE_META[state].emoji} {name}
       </button>
-      <StateLabel color={STATE_META[state].color}> ({state})</StateLabel>
-      <i>{timeTaken && state !== 'loading' ? ` Took ${timeTaken} ms` : ''}</i>
+      <StateLabel color={STATE_META[state].color}>（{STATE_META[state].label}）</StateLabel>
+      <i>{timeTaken && state !== 'loading' ? ` 耗时 ${timeTaken} 毫秒` : ''}</i>
       {canRetry && (
         <FailedJobActionButton type="button" onClick={retry}>
           ↻ 重试
@@ -459,7 +459,7 @@ const ProgressLoader = ({ loadStatus, showModal, showJobDocs }: ProgressLoaderPr
                   key={`progress-bar-${state}`}
                   color={STATE_META[state].color}
                   width={percentages[state]}
-                  title={`${state} (${Math.round(percentages[state])}%)`}
+                  title={`${STATE_META[state].label}（${Math.round(percentages[state])}%）`}
                 />
               ))}
             </ProgressBarContainer>
