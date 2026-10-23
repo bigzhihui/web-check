@@ -1,5 +1,5 @@
 ---
-import { checks } from '@/data/checks';
+import { checks, isCheck } from '@/data/checks';
 import type { Term } from '@/data/glossary';
 
 interface Props {
@@ -16,7 +16,7 @@ const { terms, linkToGlossary = false } = Astro.props;
       <dt>{linkToGlossary ? <a href={`/glossary#${id}`}>{term.title}</a> : term.title}</dt>
       <dd>
         {term.definition}
-        {!linkToGlossary && term.check && (
+        {!linkToGlossary && term.check && isCheck(term.check) && (
           <a href={`/${term.check}`}>See the {checks[term.check].title} check</a>
         )}
       </dd>
