@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "reason": "公开页面结构应保持有效；不豁免标题、表单、属性或本地断链。SSR 检测与私有 API 行为单独验证。",
+  "minimum_pages": 41,
+  "nu_errors": {}
+}

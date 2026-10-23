@@ -19,7 +19,7 @@ const { cards, numbered = false } = Astro.props;
   {cards.map((card, index) => (
     <div class="card">
       {numbered && <span class="option">Option #{index + 1}</span>}
-      <h3>{card.title}</h3>
+      <h2>{card.title}</h2>
       <p>{card.description}</p>
       {card.buttons && (
         <div class="buttons">
@@ -65,7 +65,7 @@ const { cards, numbered = false } = Astro.props;
         color: var(--primary);
         font-size: 0.8rem;
       }
-      h3 {
+      h2 {
         margin-top: 1rem;
       }
       p {
