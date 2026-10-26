@@ -1,4 +1,5 @@
 import { useReducer, useEffect, useRef, useCallback, useState } from 'react';
+import { usageOperation } from '../afeiii-usage';
 import { logJobOutcome } from 'client/utils/logger';
 import keys from 'client/utils/get-keys';
 import type { AddressType } from 'client/utils/address-type-checker';
@@ -91,6 +92,7 @@ const useJobs = (address: string, addressType: AddressType, jobs: JobSpec[]) => 
       if (cardIds.length) dispatch({ type: 'start', cardIds });
 
       const ctx: JobContext = { address, ipAddress: ip, api: apiBase, signal: controller.signal };
+      const usage = job.id === 'get-ip' ? null : usageOperation('scan');
       job
         .fetcher(ctx)
         .then((raw: any) => {
@@ -111,16 +113,19 @@ const useJobs = (address: string, addressType: AddressType, jobs: JobSpec[]) => 
             return;
           }
           if (raw?.error) {
+            usage?.failure();
             const outcome = isTimeout(raw.error) ? 'timed-out' : 'error';
             dispatch({ type: 'error', cardIds, outcome, error: raw.error, timeTaken });
             cardIds.forEach((id) => logJobOutcome(outcome, id, timeTaken, raw.error));
             return;
           }
           dispatch({ type: 'success', cardIds, raw, timeTaken });
+          usage?.success();
           cardIds.forEach((id) => logJobOutcome('success', id, timeTaken));
         })
         .catch((err: any) => {
           if (controller.signal.aborted || err?.name === 'AbortError') return;
+          usage?.failure();
           const timeTaken = Date.now() - startTime;
           const message = err?.message || '未知错误';
           if (job.id === 'get-ip') {
