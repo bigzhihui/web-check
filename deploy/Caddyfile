@@ -1,4 +1,5 @@
 check.afeiii.com {
+    import /etc/caddy/afeiii-indexnow-check.caddy
     encode zstd gzip
     header {
         Strict-Transport-Security "max-age=2592000"
@@ -8,8 +9,19 @@ check.afeiii.com {
         Permissions-Policy "camera=(), microphone=(), geolocation=()"
     }
     @account path /account /account/*
-    respond @account 404
-    reverse_proxy 127.0.0.1:3002 {
-        header_up X-Forwarded-For {remote_host}
+    handle @account {
+        respond 404
+    }
+    @baidu_verification path /baidu_verify_codeva-zDx4iv46RB.html
+    handle @baidu_verification {
+        header Content-Type "text/html; charset=utf-8"
+        header Cache-Control "public, max-age=3600"
+        root * /opt/apps/web-check/site-verification
+        file_server
+    }
+    handle {
+        reverse_proxy 127.0.0.1:3002 {
+            header_up X-Forwarded-For {client_ip}
+        }
     }
 }
